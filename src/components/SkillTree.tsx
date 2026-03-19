@@ -440,14 +440,6 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
 
     const resize = () => {
       const rect = container.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
-      const ctx = canvas.getContext("2d");
-      if (ctx) ctx.scale(dpr, dpr);
-      // Adjust actual drawing dimensions to CSS pixels
       canvas.width = rect.width;
       canvas.height = rect.height;
       needsRenderRef.current = true;
@@ -562,7 +554,8 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
     [treeData, getCanvasCoords, screenToWorld],
   );
 
-  const handleWheel = useCallback((e: React.WheelEvent) => {
+  // Wheel handler stored as ref so the native event listener always sees the latest
+  const handleWheelRef = useRef((e: WheelEvent) => {
     e.preventDefault();
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -583,6 +576,15 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
     scaleRef.current = newScale;
 
     needsRenderRef.current = true;
+  });
+
+  // Attach wheel listener with { passive: false } so preventDefault() works in Chrome
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const handler = (e: WheelEvent) => handleWheelRef.current(e);
+    canvas.addEventListener("wheel", handler, { passive: false });
+    return () => canvas.removeEventListener("wheel", handler);
   }, []);
 
   const handleMouseLeave = useCallback(() => {
@@ -623,7 +625,6 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
         className="block w-full h-full cursor-grab active:cursor-grabbing"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
-        onWheel={handleWheel}
         onMouseLeave={handleMouseLeave}
       />
       {hoveredNode && (

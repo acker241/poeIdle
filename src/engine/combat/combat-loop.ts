@@ -1,6 +1,7 @@
 import type { CombatState, CombatEvent, EnemyDef } from "../types/combat";
 import type { ResolvedCharacter } from "../types/character";
 import type { ResolvedSkill } from "../types/skills";
+import { GemTag } from "../types/skills";
 import type { SeededRng } from "../utils/rng";
 import { combatTick, TICK_DURATION } from "./combat-tick";
 import { createCombatState } from "./enemy-factory";
@@ -29,6 +30,17 @@ export function runEncounter(
   maxTicks: number = 3000, // 5 minutes at 10 ticks/sec
 ): EncounterResult {
   let state = createCombatState(enemy, player);
+
+  // Ranged advantage: projectile/bow skills give a delay before the enemy can attack,
+  // simulating the distance the enemy must close. The enemy accumulator starts negative
+  // so the player gets free attacks while the enemy approaches.
+  const isRanged = activeSkill.finalTags.includes(GemTag.Projectile) ||
+    activeSkill.finalTags.includes(GemTag.Bow);
+  if (isRanged) {
+    const closingDelay = enemy.attackTime * 2; // enemy must "walk" ~2 attack cycles
+    state = { ...state, enemyAttackAccumulator: -closingDelay };
+  }
+
   const allEvents: CombatEvent[] = [];
   let xpGained = 0;
 

@@ -54,16 +54,22 @@ export function combatTick(
   if (accumulator >= attackInterval) {
     accumulator -= attackInterval;
 
-    // Check mana
+    // Check mana — if insufficient, fall back to default attack (free, weapon-only)
     const manaResult = spendMana(newState.playerCurrentMana, activeSkill.effectiveManaCost);
+    const usingDefaultAttack = !manaResult;
     if (manaResult) {
       newState = { ...newState, playerCurrentMana: manaResult.newMana };
+    }
 
+    // Default attack is always an attack (uses weapon damage, no added damage)
+    const effectiveIsAttack = usingDefaultAttack ? true : isAttack;
+
+    {
       // Resolve hit
       let didHit = true;
       let newEnemyEntropy = newState.enemyEvasionEntropy;
 
-      if (isAttack) {
+      if (effectiveIsAttack) {
         const accuracy = getStatValue(player.stats, STAT_ACCURACY);
         const hitResult = resolveAttackHit(accuracy, newState.enemy.evasion, newState.enemyEvasionEntropy);
         didHit = hitResult.hit;
@@ -77,11 +83,11 @@ export function combatTick(
       } else {
         // Calculate damage
         const hitCtx: HitContext = {
-          baseDamage: isAttack ? getWeaponDamage(player) : activeSkill.active.baseDamage,
-          addedDamage: activeSkill.totalAddedDamage,
-          damageEffectiveness: activeSkill.active.damageEffectiveness,
+          baseDamage: effectiveIsAttack ? getWeaponDamage(player) : activeSkill.active.baseDamage,
+          addedDamage: usingDefaultAttack ? [] : activeSkill.totalAddedDamage,
+          damageEffectiveness: usingDefaultAttack ? 1.0 : activeSkill.active.damageEffectiveness,
           conversions: [], // TODO: collect from stats
-          isAttack,
+          isAttack: effectiveIsAttack,
           stats: player.stats,
           enemyResistances: newState.enemy.resistances,
           enemyArmour: newState.enemy.armour,
@@ -98,22 +104,24 @@ export function combatTick(
 
         events.push({ type: "player_hit", damage: totalDamage, breakdown });
 
-        // Apply ailments
-        const hitDmgByType = extractDamageByType(breakdown.afterResistances);
-        const ailmentResult = applyAilmentsFromHit(
-          hitDmgByType,
-          totalDamage,
-          newState.enemy.baseLife,
-          newState.enemyAilments,
-          player.stats,
-          activeSkill.active.id,
-          newState.elapsedMs,
-          rng,
-          activeSkill.active.ailmentChances,
-        );
-        newState = { ...newState, enemyAilments: ailmentResult.newAilmentState };
-        for (const a of ailmentResult.appliedAilments) {
-          events.push({ type: "ailment_applied", ailment: a, effect: 0 });
+        // Apply ailments (not for default attack)
+        if (!usingDefaultAttack) {
+          const hitDmgByType = extractDamageByType(breakdown.afterResistances);
+          const ailmentResult = applyAilmentsFromHit(
+            hitDmgByType,
+            totalDamage,
+            newState.enemy.baseLife,
+            newState.enemyAilments,
+            player.stats,
+            activeSkill.active.id,
+            newState.elapsedMs,
+            rng,
+            activeSkill.active.ailmentChances,
+          );
+          newState = { ...newState, enemyAilments: ailmentResult.newAilmentState };
+          for (const a of ailmentResult.appliedAilments) {
+            events.push({ type: "ailment_applied", ailment: a, effect: 0 });
+          }
         }
       }
     }
@@ -136,29 +144,38 @@ export function combatTick(
   if (enemyAccum >= newState.enemy.attackTime) {
     enemyAccum -= newState.enemy.attackTime;
 
-    // Simplified enemy damage: just sum all damage types
-    let enemyDamage = 0;
-    for (const dmg of newState.enemy.damagePerHit) {
-      enemyDamage += rng.rollRange(dmg.min, dmg.max);
-    }
+    // Evasion check: player evasion vs enemy accuracy
+    const playerEvasion = getStatValue(player.stats, STAT_EVASION);
+    const evasionResult = resolveAttackHit(newState.enemy.accuracy, playerEvasion, newState.playerEvasionEntropy);
+    newState = { ...newState, playerEvasionEntropy: evasionResult.newEntropy };
 
-    // Block check
-    const blockChance = getStatValue(player.stats, STAT_BLOCK_CHANCE);
-    if (resolveBlock(blockChance, rng)) {
-      events.push({ type: "player_blocked" });
+    if (!evasionResult.hit) {
+      events.push({ type: "enemy_miss" });
     } else {
-      // Apply damage to player (simplified: no armour/resistance breakdown per type for enemy hits)
-      const result = applyDamageToHealthPool(
-        enemyDamage,
-        newState.playerCurrentLife,
-        newState.playerCurrentES,
-      );
-      newState = {
-        ...newState,
-        playerCurrentLife: result.newLife,
-        playerCurrentES: result.newES,
-      };
-      events.push({ type: "enemy_hit", damage: enemyDamage });
+      // Simplified enemy damage: just sum all damage types
+      let enemyDamage = 0;
+      for (const dmg of newState.enemy.damagePerHit) {
+        enemyDamage += rng.rollRange(dmg.min, dmg.max);
+      }
+
+      // Block check
+      const blockChance = getStatValue(player.stats, STAT_BLOCK_CHANCE);
+      if (resolveBlock(blockChance, rng)) {
+        events.push({ type: "player_blocked" });
+      } else {
+        // Apply damage to player (simplified: no armour/resistance breakdown per type for enemy hits)
+        const result = applyDamageToHealthPool(
+          enemyDamage,
+          newState.playerCurrentLife,
+          newState.playerCurrentES,
+        );
+        newState = {
+          ...newState,
+          playerCurrentLife: result.newLife,
+          playerCurrentES: result.newES,
+        };
+        events.push({ type: "enemy_hit", damage: enemyDamage });
+      }
     }
   }
   newState = { ...newState, enemyAttackAccumulator: enemyAccum };

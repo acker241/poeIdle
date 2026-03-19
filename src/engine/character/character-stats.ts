@@ -22,6 +22,8 @@ import {
   STAT_COLD_RESISTANCE,
   STAT_LIGHTNING_RESISTANCE,
   STAT_CHAOS_RESISTANCE,
+  STAT_ACCURACY,
+  STAT_EVASION,
 } from "../stats/stat-registry";
 
 /**
@@ -48,6 +50,8 @@ export function buildBaseModifiers(state: CharacterState): readonly StatModifier
     // Per-level bonuses
     { statId: STAT_MAX_LIFE, type: ModifierType.Flat, value: PER_LEVEL_BONUSES.lifePerLevel * state.level, source: lvlSrc },
     { statId: STAT_MAX_MANA, type: ModifierType.Flat, value: PER_LEVEL_BONUSES.manaPerLevel * state.level, source: lvlSrc },
+    { statId: STAT_ACCURACY, type: ModifierType.Flat, value: PER_LEVEL_BONUSES.accuracyPerLevel * state.level, source: lvlSrc },
+    { statId: STAT_EVASION, type: ModifierType.Flat, value: PER_LEVEL_BONUSES.evasionPerLevel * state.level, source: lvlSrc },
 
     // Base movement speed (30% in PoE)
     { statId: STAT_MOVEMENT_SPEED, type: ModifierType.Flat, value: 1.0, source: src },
@@ -102,18 +106,28 @@ export function resolveCharacter(
   // Attribute-derived bonuses
   const attrLifeBonus = str * ATTRIBUTE_BONUSES.lifePerStrength;
   const attrManaBonus = int * ATTRIBUTE_BONUSES.manaPerIntelligence;
+  const attrAccuracyBonus = dex * ATTRIBUTE_BONUSES.accuracyPerDexterity;
 
-  const maxLife = getStatValue(stats, STAT_MAX_LIFE) + attrLifeBonus;
-  const maxMana = getStatValue(stats, STAT_MAX_MANA) + attrManaBonus;
-  const maxEnergyShield = getStatValue(stats, STAT_MAX_ENERGY_SHIELD);
+  // Apply accuracy from dex as a flat modifier to stats
+  const accuracyMod: StatModifier = {
+    statId: STAT_ACCURACY,
+    type: ModifierType.Flat,
+    value: attrAccuracyBonus,
+    source: { kind: "base" as const, id: "attribute", label: "Dexterity" },
+  };
+  const finalStats = calculateAllStats(baseStats, [...allModifiers, accuracyMod]);
 
-  const attacksPerSecond = getStatValue(stats, STAT_ATTACK_SPEED);
-  const castsPerSecond = getStatValue(stats, STAT_CAST_SPEED);
-  const movementSpeed = getStatValue(stats, STAT_MOVEMENT_SPEED);
+  const maxLife = getStatValue(finalStats, STAT_MAX_LIFE) + attrLifeBonus;
+  const maxMana = getStatValue(finalStats, STAT_MAX_MANA) + attrManaBonus;
+  const maxEnergyShield = getStatValue(finalStats, STAT_MAX_ENERGY_SHIELD);
+
+  const attacksPerSecond = getStatValue(finalStats, STAT_ATTACK_SPEED);
+  const castsPerSecond = getStatValue(finalStats, STAT_CAST_SPEED);
+  const movementSpeed = getStatValue(finalStats, STAT_MOVEMENT_SPEED);
 
   return {
     state,
-    stats,
+    stats: finalStats,
     maxLife,
     maxMana,
     maxEnergyShield,
@@ -121,10 +135,10 @@ export function resolveCharacter(
     castsPerSecond,
     movementSpeed,
     resistances: {
-      fire: Math.min(getStatValue(stats, STAT_FIRE_RESISTANCE), 0.75),
-      cold: Math.min(getStatValue(stats, STAT_COLD_RESISTANCE), 0.75),
-      lightning: Math.min(getStatValue(stats, STAT_LIGHTNING_RESISTANCE), 0.75),
-      chaos: Math.min(getStatValue(stats, STAT_CHAOS_RESISTANCE), 0.75),
+      fire: Math.min(getStatValue(finalStats, STAT_FIRE_RESISTANCE), 0.75),
+      cold: Math.min(getStatValue(finalStats, STAT_COLD_RESISTANCE), 0.75),
+      lightning: Math.min(getStatValue(finalStats, STAT_LIGHTNING_RESISTANCE), 0.75),
+      chaos: Math.min(getStatValue(finalStats, STAT_CHAOS_RESISTANCE), 0.75),
     },
   };
 }
