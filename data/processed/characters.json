@@ -1,0 +1,107 @@
+[
+  {
+    "id": "marauder",
+    "name": "Marauder",
+    "integerId": 1,
+    "strength": 32,
+    "dexterity": 14,
+    "intelligence": 14,
+    "baseLife": 38,
+    "baseMana": 34,
+    "unarmed": {
+      "attackTime": 833,
+      "minDamage": 2,
+      "maxDamage": 8
+    }
+  },
+  {
+    "id": "witch",
+    "name": "Witch",
+    "integerId": 3,
+    "strength": 14,
+    "dexterity": 14,
+    "intelligence": 32,
+    "baseLife": 38,
+    "baseMana": 34,
+    "unarmed": {
+      "attackTime": 833,
+      "minDamage": 2,
+      "maxDamage": 5
+    }
+  },
+  {
+    "id": "scion",
+    "name": "Scion",
+    "integerId": 0,
+    "strength": 20,
+    "dexterity": 20,
+    "intelligence": 20,
+    "baseLife": 38,
+    "baseMana": 34,
+    "unarmed": {
+      "attackTime": 833,
+      "minDamage": 2,
+      "maxDamage": 6
+    }
+  },
+  {
+    "id": "ranger",
+    "name": "Ranger",
+    "integerId": 2,
+    "strength": 14,
+    "dexterity": 32,
+    "intelligence": 14,
+    "baseLife": 38,
+    "baseMana": 34,
+    "unarmed": {
+      "attackTime": 833,
+      "minDamage": 2,
+      "maxDamage": 5
+    }
+  },
+  {
+    "id": "duelist",
+    "name": "Duelist",
+    "integerId": 4,
+    "strength": 23,
+    "dexterity": 23,
+    "intelligence": 14,
+    "baseLife": 38,
+    "baseMana": 34,
+    "unarmed": {
+      "attackTime": 833,
+      "minDamage": 2,
+      "maxDamage": 6
+    }
+  },
+  {
+    "id": "shadow",
+    "name": "Shadow",
+    "integerId": 6,
+    "strength": 14,
+    "dexterity": 23,
+    "intelligence": 23,
+    "baseLife": 38,
+    "baseMana": 34,
+    "unarmed": {
+      "attackTime": 833,
+      "minDamage": 2,
+      "maxDamage": 5
+    }
+  },
+  {
+    "id": "templar",
+    "name": "Templar",
+    "integerId": 5,
+    "strength": 23,
+    "dexterity": 14,
+    "intelligence": 23,
+    "baseLife": 38,
+    "baseMana": 34,
+    "unarmed": {
+      "attackTime": 833,
+      "minDamage": 2,
+      "maxDamage": 6
+    }
+  }
+]

@@ -1,0 +1,992 @@
+[
+  {
+    "id": "LifeFlask",
+    "name": "Life Flasks",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "ManaFlask",
+    "name": "Mana Flasks",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "HybridFlask",
+    "name": "Hybrid Flasks",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Currency",
+    "name": "Currency",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Amulet",
+    "name": "Amulets",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Ring",
+    "name": "Rings",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Claw",
+    "name": "Claws",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Dagger",
+    "name": "Daggers",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Wand",
+    "name": "Wands",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "One Hand Sword",
+    "name": "One Hand Swords",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Thrusting One Hand Sword",
+    "name": "Thrusting One Hand Swords",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "One Hand Axe",
+    "name": "One Hand Axes",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "One Hand Mace",
+    "name": "One Hand Maces",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Bow",
+    "name": "Bows",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Staff",
+    "name": "Staves",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Two Hand Sword",
+    "name": "Two Hand Swords",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Two Hand Axe",
+    "name": "Two Hand Axes",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Two Hand Mace",
+    "name": "Two Hand Maces",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Active Skill Gem",
+    "name": "Skill Gems",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Support Skill Gem",
+    "name": "Support Gems",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Quiver",
+    "name": "Quivers",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Belt",
+    "name": "Belts",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Gloves",
+    "name": "Gloves",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Boots",
+    "name": "Boots",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Body Armour",
+    "name": "Body Armours",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Helmet",
+    "name": "Helmets",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Shield",
+    "name": "Shields",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "SmallRelic",
+    "name": "Small Relics",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "MediumRelic",
+    "name": "Medium Relics",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "LargeRelic",
+    "name": "Large Relics",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "StackableCurrency",
+    "name": "Stackable Currency",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "QuestItem",
+    "name": "Quest Items",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Sceptre",
+    "name": "Sceptres",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "UtilityFlask",
+    "name": "Utility Flasks",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "UtilityFlaskCritical",
+    "name": "Critical Utility Flasks",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Map",
+    "name": "Maps",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Unarmed",
+    "name": "",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "FishingRod",
+    "name": "Fishing Rods",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "MapFragment",
+    "name": "Map Fragments",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "HideoutDoodad",
+    "name": "Hideout Doodads",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Microtransaction",
+    "name": "Microtransactions",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Jewel",
+    "name": "Jewels",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "DivinationCard",
+    "name": "Divination Cards",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "LabyrinthItem",
+    "name": "Labyrinth Items",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "LabyrinthTrinket",
+    "name": "Labyrinth Trinkets",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "LabyrinthMapItem",
+    "name": "Labyrinth Map Items",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "MiscMapItem",
+    "name": "Misc Map Items",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Leaguestone",
+    "name": "Leaguestones",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "PantheonSoul",
+    "name": "Pantheon Souls",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "UniqueFragment",
+    "name": "Pieces",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "AbyssJewel",
+    "name": "Abyss Jewels",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "IncursionItem",
+    "name": "Incursion Items",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "DelveSocketableCurrency",
+    "name": "Delve Socketable Currency",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Incubator",
+    "name": "Incubators",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "UniqueShard",
+    "name": "Shards",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "UniqueShardBase",
+    "name": "Shard Hearts",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Rune Dagger",
+    "name": "Rune Daggers",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Warstaff",
+    "name": "Warstaves",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "DelveStackableSocketableCurrency",
+    "name": "Delve Stackable Socketable Currency",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "AtlasUpgradeItem",
+    "name": "Atlas Upgrade Items",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "MetamorphosisDNA",
+    "name": "Metamorph Samples",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "HiddenItem",
+    "name": "Hidden Items",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "DONOTUSE1",
+    "name": "",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "DONOTUSE2",
+    "name": "",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "DONOTUSE3",
+    "name": "",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "HeistContract",
+    "name": "Contracts",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "HeistEquipmentWeapon",
+    "name": "Heist Gear",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "HeistEquipmentTool",
+    "name": "Heist Tools",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "HeistEquipmentUtility",
+    "name": "Heist Cloaks",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "HeistEquipmentReward",
+    "name": "Heist Brooches",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "HeistBlueprint",
+    "name": "Blueprints",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Trinket",
+    "name": "Trinkets",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "HeistObjective",
+    "name": "Heist Targets",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "ExpeditionLogbook",
+    "name": "Expedition Logbooks",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "IncubatorStackable",
+    "name": "Incubators",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "ArchnemesisMod",
+    "name": "Archnemesis Mods",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "DONOTUSE4",
+    "name": "",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "DONOTUSE5",
+    "name": "",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "DONOTUSE6",
+    "name": "",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "DONOTUSE7",
+    "name": "",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "InstanceLocalItem",
+    "name": "Instance Local Items",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "SentinelDrone",
+    "name": "Sentinels",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "MemoryLine",
+    "name": "Memories",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Relic",
+    "name": "Relics",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "SanctumSpecialRelic",
+    "name": "Sanctified Relics",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Breachstone",
+    "name": "Breachstones",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "GiftBox",
+    "name": "",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "VaultKey",
+    "name": "Vault Keys",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "ItemisedSanctum",
+    "name": "Sanctum Research",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Tincture",
+    "name": "Tinctures",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "ItemisedCorpse",
+    "name": "Corpses",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "AnimalCharm",
+    "name": "Charms",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "NecropolisPack",
+    "name": "Embers of the Allflame",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "Gold",
+    "name": "Gold",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "AtlasRelic",
+    "name": "Idols",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "DONOTUSE8",
+    "name": "",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "BrequelFruit",
+    "name": "Wombgifts",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "MapKey",
+    "name": "Maps",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  },
+  {
+    "id": "RemovedItem",
+    "name": "",
+    "elderTag": null,
+    "shaperTag": null,
+    "crusaderTag": null,
+    "redeemerTag": null,
+    "hunterTag": null,
+    "warlordTag": null
+  }
+]

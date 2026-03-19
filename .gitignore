@@ -23,3 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .claude/
+
+# Raw PoE data (112MB+ — re-download with: npx tsx scripts/download-poe-data.ts)
+data/poe-raw/
+repoe_tree.json
