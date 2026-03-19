@@ -24,6 +24,9 @@ dist-ssr
 *.sw?
 .claude/
 
-# Raw PoE data (112MB+ — re-download with: npx tsx scripts/download-poe-data.ts)
+# Raw PoE data (112MB+ — re-download with: npm run data:download)
 data/poe-raw/
 repoe_tree.json
+
+# Generated public data (re-generate with: npm run data:transform)
+public/data/

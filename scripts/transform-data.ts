@@ -5,7 +5,7 @@
  *
  * Reads from: data/poe-raw/ (downloaded RePoE JSONs)
  * Reads from: data/overrides/ (our game-specific tweaks)
- * Writes to:  data/processed/ (final data for the engine)
+ * Writes to:  data/processed/ + public/data/processed/ (for Vite serving)
  */
 
 import { readFileSync, writeFileSync, existsSync } from "fs";
@@ -15,15 +15,19 @@ const ROOT = join(import.meta.dirname, "..");
 const RAW = join(ROOT, "data", "poe-raw");
 const OVERRIDES = join(ROOT, "data", "overrides");
 const OUT = join(ROOT, "data", "processed");
+const PUBLIC_OUT = join(ROOT, "public", "data", "processed");
 
 function readJson<T>(path: string): T {
   return JSON.parse(readFileSync(path, "utf-8")) as T;
 }
 
 function writeJson(filename: string, data: unknown) {
-  const path = join(OUT, filename);
-  writeFileSync(path, JSON.stringify(data, null, 2), "utf-8");
-  const sizeKB = Math.round(Buffer.byteLength(JSON.stringify(data)) / 1024);
+  const json = JSON.stringify(data, null, 2);
+  writeFileSync(join(OUT, filename), json, "utf-8");
+  // Also write to public/ for Vite dev server
+  if (!existsSync(PUBLIC_OUT)) mkdirSync(PUBLIC_OUT, { recursive: true });
+  writeFileSync(join(PUBLIC_OUT, filename), json, "utf-8");
+  const sizeKB = Math.round(Buffer.byteLength(json) / 1024);
   console.log(`  ✓ ${filename} (${sizeKB} KB)`);
 }
 
@@ -143,7 +147,7 @@ function transformMonsterStats() {
   // Convert keyed-by-level object to array
   const stats = Object.entries(raw).map(([level, s]) => ({
     level: parseInt(level),
-    damage: s.damage,
+    physicalDamage: s.physical_damage,
     evasion: s.evasion,
     accuracy: s.accuracy,
     life: s.life,
@@ -383,7 +387,7 @@ interface RawGem {
 }
 
 interface RawMonsterStats {
-  damage: number;
+  physical_damage: number;
   evasion: number;
   accuracy: number;
   life: number;
