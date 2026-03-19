@@ -10,6 +10,9 @@ interface CharacterPanelProps {
   totalXp: number;
   killCount: number;
   elapsedMs: number;
+  zoneName?: string;
+  availableSkillPoints?: number;
+  questsCompleted?: number;
 }
 
 function HealthBar({
@@ -60,13 +63,6 @@ function ResistanceRow({
   );
 }
 
-function formatTime(ms: number): string {
-  const totalSec = Math.floor(ms / 1000);
-  const min = Math.floor(totalSec / 60);
-  const sec = totalSec % 60;
-  return `${min}:${sec.toString().padStart(2, "0")}`;
-}
-
 export function CharacterPanel({
   character,
   characterState,
@@ -74,7 +70,9 @@ export function CharacterPanel({
   combatState,
   totalXp,
   killCount,
-  elapsedMs,
+  zoneName,
+  availableSkillPoints,
+  questsCompleted,
 }: CharacterPanelProps) {
   if (!character || !characterState) {
     return (
@@ -104,7 +102,19 @@ export function CharacterPanel({
           <div className="text-sm text-muted-foreground">
             {className} &middot; Level {characterState.level}
           </div>
+          {zoneName && (
+            <div className="text-xs text-sky-400 mt-0.5">{zoneName}</div>
+          )}
         </div>
+
+        {/* Skill points banner */}
+        {availableSkillPoints != null && availableSkillPoints > 0 && (
+          <div className="rounded border border-amber-500/30 bg-amber-500/10 px-2 py-1.5">
+            <div className="text-xs font-semibold text-amber-400">
+              +{availableSkillPoints} Passive Point{availableSkillPoints > 1 ? "s" : ""} available
+            </div>
+          </div>
+        )}
 
         {/* Resource bars */}
         <div className="space-y-2">
@@ -215,10 +225,6 @@ export function CharacterPanel({
             Session
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">Time</span>
-            <span className="font-mono">{formatTime(elapsedMs)}</span>
-          </div>
-          <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Kills</span>
             <span className="font-mono text-amber-400">{killCount}</span>
           </div>
@@ -228,6 +234,12 @@ export function CharacterPanel({
               {totalXp.toLocaleString()}
             </span>
           </div>
+          {questsCompleted != null && questsCompleted > 0 && (
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">Quests</span>
+              <span className="font-mono text-green-400">{questsCompleted}</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

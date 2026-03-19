@@ -30,7 +30,23 @@ export const ACT1_ENEMIES: readonly EnemyDef[] = [
     experienceReward: 8,
     isBoss: false,
   },
-  // --- The Coast (level 2-3) ---
+  // --- The Coast (level 2) ---
+  {
+    id: "cannibal_coast",
+    name: "Cannibal",
+    level: 2,
+    baseLife: 25,
+    armour: 5,
+    evasion: 35,
+    accuracy: 25,
+    resistances: defaultResists(),
+    damagePerHit: [{ type: DamageType.Physical, min: 2, max: 5 }],
+    attackTime: 1450,
+    isMoving: true,
+    experienceReward: 11,
+    isBoss: false,
+  },
+  // --- The Tidal Island (level 3) ---
   {
     id: "cannibal_2",
     name: "Cannibal",
@@ -46,7 +62,23 @@ export const ACT1_ENEMIES: readonly EnemyDef[] = [
     experienceReward: 14,
     isBoss: false,
   },
-  // --- The Mud Flats (level 4-5) ---
+  // --- The Mud Flats (level 4) ---
+  {
+    id: "rhoa_feather_4",
+    name: "Rhoa Feather",
+    level: 4,
+    baseLife: 45,
+    armour: 10,
+    evasion: 55,
+    accuracy: 38,
+    resistances: defaultResists(),
+    damagePerHit: [{ type: DamageType.Physical, min: 4, max: 8 }],
+    attackTime: 1350,
+    isMoving: true,
+    experienceReward: 18,
+    isBoss: false,
+  },
+  // --- The Submerged Passage (level 5) ---
   {
     id: "rhoa_4",
     name: "Rhoa",
@@ -62,7 +94,23 @@ export const ACT1_ENEMIES: readonly EnemyDef[] = [
     experienceReward: 22,
     isBoss: false,
   },
-  // --- The Ledge (level 6-7) ---
+  // --- The Ledge (level 6) ---
+  {
+    id: "scavenging_hag_6",
+    name: "Scavenging Hag",
+    level: 6,
+    baseLife: 75,
+    armour: 15,
+    evasion: 60,
+    accuracy: 50,
+    resistances: { ...defaultResists(), [DamageType.Fire]: 0.10 },
+    damagePerHit: [{ type: DamageType.Physical, min: 6, max: 11 }],
+    attackTime: 1250,
+    isMoving: true,
+    experienceReward: 26,
+    isBoss: false,
+  },
+  // --- The Climb (level 7) ---
   {
     id: "skeleton_6",
     name: "Skeleton Warrior",
@@ -78,7 +126,23 @@ export const ACT1_ENEMIES: readonly EnemyDef[] = [
     experienceReward: 30,
     isBoss: false,
   },
-  // --- The Climb (level 8-9) ---
+  // --- The Lower Prison (level 8) ---
+  {
+    id: "shield_crab_8",
+    name: "Shield Crab",
+    level: 8,
+    baseLife: 110,
+    armour: 80,
+    evasion: 40,
+    accuracy: 60,
+    resistances: { ...defaultResists(), [DamageType.Physical]: 0.10 },
+    damagePerHit: [{ type: DamageType.Physical, min: 8, max: 14 }],
+    attackTime: 1400,
+    isMoving: true,
+    experienceReward: 34,
+    isBoss: false,
+  },
+  // --- The Upper Prison (level 9) ---
   {
     id: "goatman_8",
     name: "Goatman",
@@ -94,7 +158,7 @@ export const ACT1_ENEMIES: readonly EnemyDef[] = [
     experienceReward: 40,
     isBoss: false,
   },
-  // --- The Prison (level 9-10) ---
+  // --- Prisoner's Gate (level 10) ---
   {
     id: "necromancer_9",
     name: "Necromancer",
@@ -110,7 +174,26 @@ export const ACT1_ENEMIES: readonly EnemyDef[] = [
     experienceReward: 45,
     isBoss: false,
   },
-  // --- The Ship Graveyard (level 11-12) ---
+  // --- The Ship Graveyard (level 11) ---
+  {
+    id: "cannibal_spirit_11",
+    name: "Cannibal Spirit",
+    level: 11,
+    baseLife: 110,
+    armour: 10,
+    evasion: 75,
+    accuracy: 68,
+    resistances: { ...defaultResists(), [DamageType.Cold]: 0.15, [DamageType.Chaos]: 0.20 },
+    damagePerHit: [
+      { type: DamageType.Physical, min: 6, max: 10 },
+      { type: DamageType.Chaos, min: 4, max: 8 },
+    ],
+    attackTime: 1300,
+    isMoving: true,
+    experienceReward: 48,
+    isBoss: false,
+  },
+  // --- The Ship Graveyard Cave / Cavern of Wrath (level 12) ---
   {
     id: "sea_witch_11",
     name: "Sea Witch",
@@ -126,8 +209,75 @@ export const ACT1_ENEMIES: readonly EnemyDef[] = [
     experienceReward: 50,
     isBoss: false,
   },
+  // --- The Cavern of Anger (level 13) ---
+  {
+    id: "siren_spawn_13",
+    name: "Siren Spawn",
+    level: 13,
+    baseLife: 140,
+    armour: 20,
+    evasion: 85,
+    accuracy: 75,
+    resistances: { ...defaultResists(), [DamageType.Cold]: 0.35, [DamageType.Lightning]: 0.10 },
+    damagePerHit: [
+      { type: DamageType.Physical, min: 8, max: 14 },
+      { type: DamageType.Cold, min: 6, max: 12 },
+    ],
+    attackTime: 1300,
+    isMoving: true,
+    experienceReward: 55,
+    isBoss: false,
+  },
 
   // === BOSSES ===
+  {
+    id: "hillock",
+    name: "Hillock",
+    level: 2,
+    baseLife: 100,
+    armour: 20,
+    evasion: 20,
+    accuracy: 30,
+    resistances: defaultResists(),
+    damagePerHit: [{ type: DamageType.Physical, min: 4, max: 8 }],
+    attackTime: 2000,
+    isMoving: true,
+    experienceReward: 40,
+    isBoss: true,
+    ailmentThreshold: 0.3,
+  },
+  {
+    id: "hailrake",
+    name: "Hailrake",
+    level: 3,
+    baseLife: 200,
+    armour: 15,
+    evasion: 40,
+    accuracy: 40,
+    resistances: { ...defaultResists(), [DamageType.Cold]: 0.40, [DamageType.Fire]: -0.15 },
+    damagePerHit: [{ type: DamageType.Cold, min: 5, max: 10 }],
+    attackTime: 1600,
+    isMoving: true,
+    experienceReward: 80,
+    isBoss: true,
+    ailmentThreshold: 0.3,
+  },
+  {
+    id: "chatters",
+    name: "Chatters",
+    level: 8,
+    baseLife: 600,
+    armour: 40,
+    evasion: 60,
+    accuracy: 75,
+    resistances: { ...defaultResists(), [DamageType.Cold]: 0.30, [DamageType.Fire]: -0.10 },
+    damagePerHit: [{ type: DamageType.Cold, min: 10, max: 18 }],
+    attackTime: 900,
+    isMoving: true,
+    experienceReward: 250,
+    isBoss: true,
+    ailmentThreshold: 0.4,
+  },
   {
     id: "brutus",
     name: "Brutus, Lord Incarcerator",
@@ -142,7 +292,7 @@ export const ACT1_ENEMIES: readonly EnemyDef[] = [
     isMoving: true,
     experienceReward: 500,
     isBoss: true,
-    ailmentThreshold: 0.5, // 50% reduced ailment effect
+    ailmentThreshold: 0.5,
   },
   {
     id: "merveil",
