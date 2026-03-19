@@ -1,6 +1,7 @@
 [
   {
     "level": 1,
+    "physicalDamage": 4.989999771118164,
     "evasion": 67,
     "accuracy": 14,
     "life": 22,
@@ -10,6 +11,7 @@
   },
   {
     "level": 2,
+    "physicalDamage": 5.559999942779541,
     "evasion": 86,
     "accuracy": 15,
     "life": 26,
@@ -19,6 +21,7 @@
   },
   {
     "level": 3,
+    "physicalDamage": 6.159999847412109,
     "evasion": 104,
     "accuracy": 15,
     "life": 31,
@@ -28,6 +31,7 @@
   },
   {
     "level": 4,
+    "physicalDamage": 6.809999942779541,
     "evasion": 124,
     "accuracy": 16,
     "life": 36,
@@ -37,6 +41,7 @@
   },
   {
     "level": 5,
+    "physicalDamage": 7.5,
     "evasion": 144,
     "accuracy": 17,
     "life": 42,
@@ -46,6 +51,7 @@
   },
   {
     "level": 6,
+    "physicalDamage": 8.229999542236328,
     "evasion": 166,
     "accuracy": 18,
     "life": 48,
@@ -55,6 +61,7 @@
   },
   {
     "level": 7,
+    "physicalDamage": 9,
     "evasion": 188,
     "accuracy": 19,
     "life": 55,
@@ -64,6 +71,7 @@
   },
   {
     "level": 8,
+    "physicalDamage": 9.819999694824219,
     "evasion": 211,
     "accuracy": 20,
     "life": 62,
@@ -73,6 +81,7 @@
   },
   {
     "level": 9,
+    "physicalDamage": 10.699999809265137,
     "evasion": 234,
     "accuracy": 21,
     "life": 70,
@@ -82,6 +91,7 @@
   },
   {
     "level": 10,
+    "physicalDamage": 11.619999885559082,
     "evasion": 259,
     "accuracy": 23,
     "life": 78,
@@ -91,6 +101,7 @@
   },
   {
     "level": 11,
+    "physicalDamage": 12.600000381469727,
     "evasion": 285,
     "accuracy": 24,
     "life": 87,
@@ -100,6 +111,7 @@
   },
   {
     "level": 12,
+    "physicalDamage": 13.640000343322754,
     "evasion": 311,
     "accuracy": 25,
     "life": 97,
@@ -109,6 +121,7 @@
   },
   {
     "level": 13,
+    "physicalDamage": 14.739999771118164,
     "evasion": 339,
     "accuracy": 26,
     "life": 107,
@@ -118,6 +131,7 @@
   },
   {
     "level": 14,
+    "physicalDamage": 15.90999984741211,
     "evasion": 368,
     "accuracy": 28,
     "life": 119,
@@ -127,6 +141,7 @@
   },
   {
     "level": 15,
+    "physicalDamage": 17.139999389648438,
     "evasion": 397,
     "accuracy": 29,
     "life": 131,
@@ -136,6 +151,7 @@
   },
   {
     "level": 16,
+    "physicalDamage": 18.450000762939453,
     "evasion": 428,
     "accuracy": 31,
     "life": 144,
@@ -145,6 +161,7 @@
   },
   {
     "level": 17,
+    "physicalDamage": 19.829999923706055,
     "evasion": 460,
     "accuracy": 32,
     "life": 158,
@@ -154,6 +171,7 @@
   },
   {
     "level": 18,
+    "physicalDamage": 21.290000915527344,
     "evasion": 493,
     "accuracy": 34,
     "life": 173,
@@ -163,6 +181,7 @@
   },
   {
     "level": 19,
+    "physicalDamage": 22.84000015258789,
     "evasion": 527,
     "accuracy": 35,
     "life": 190,
@@ -172,6 +191,7 @@
   },
   {
     "level": 20,
+    "physicalDamage": 24.469999313354492,
     "evasion": 563,
     "accuracy": 37,
     "life": 207,
@@ -181,6 +201,7 @@
   },
   {
     "level": 21,
+    "physicalDamage": 26.190000534057617,
     "evasion": 600,
     "accuracy": 39,
     "life": 226,
@@ -190,6 +211,7 @@
   },
   {
     "level": 22,
+    "physicalDamage": 28.010000228881836,
     "evasion": 638,
     "accuracy": 41,
     "life": 246,
@@ -199,6 +221,7 @@
   },
   {
     "level": 23,
+    "physicalDamage": 29.940000534057617,
     "evasion": 677,
     "accuracy": 43,
     "life": 267,
@@ -208,6 +231,7 @@
   },
   {
     "level": 24,
+    "physicalDamage": 31.959999084472656,
     "evasion": 718,
     "accuracy": 45,
     "life": 290,
@@ -217,6 +241,7 @@
   },
   {
     "level": 25,
+    "physicalDamage": 34.11000061035156,
     "evasion": 760,
     "accuracy": 47,
     "life": 315,
@@ -226,6 +251,7 @@
   },
   {
     "level": 26,
+    "physicalDamage": 36.36000061035156,
     "evasion": 804,
     "accuracy": 49,
     "life": 341,
@@ -235,6 +261,7 @@
   },
   {
     "level": 27,
+    "physicalDamage": 38.75,
     "evasion": 849,
     "accuracy": 52,
     "life": 370,
@@ -244,6 +271,7 @@
   },
   {
     "level": 28,
+    "physicalDamage": 41.2599983215332,
     "evasion": 896,
     "accuracy": 54,
     "life": 400,
@@ -253,6 +281,7 @@
   },
   {
     "level": 29,
+    "physicalDamage": 43.90999984741211,
     "evasion": 944,
     "accuracy": 57,
     "life": 432,
@@ -262,6 +291,7 @@
   },
   {
     "level": 30,
+    "physicalDamage": 46.70000076293945,
     "evasion": 994,
     "accuracy": 59,
     "life": 467,
@@ -271,6 +301,7 @@
   },
   {
     "level": 31,
+    "physicalDamage": 49.650001525878906,
     "evasion": 1046,
     "accuracy": 62,
     "life": 504,
@@ -280,6 +311,7 @@
   },
   {
     "level": 32,
+    "physicalDamage": 52.75,
     "evasion": 1100,
     "accuracy": 65,
     "life": 543,
@@ -289,6 +321,7 @@
   },
   {
     "level": 33,
+    "physicalDamage": 56.0099983215332,
     "evasion": 1155,
     "accuracy": 68,
     "life": 585,
@@ -298,6 +331,7 @@
   },
   {
     "level": 34,
+    "physicalDamage": 59.45000076293945,
     "evasion": 1212,
     "accuracy": 71,
     "life": 630,
@@ -307,6 +341,7 @@
   },
   {
     "level": 35,
+    "physicalDamage": 63.08000183105469,
     "evasion": 1271,
     "accuracy": 74,
     "life": 678,
@@ -316,6 +351,7 @@
   },
   {
     "level": 36,
+    "physicalDamage": 66.88999938964844,
     "evasion": 1332,
     "accuracy": 77,
     "life": 730,
@@ -325,6 +361,7 @@
   },
   {
     "level": 37,
+    "physicalDamage": 70.91000366210938,
     "evasion": 1395,
     "accuracy": 81,
     "life": 785,
@@ -334,6 +371,7 @@
   },
   {
     "level": 38,
+    "physicalDamage": 75.12999725341797,
     "evasion": 1460,
     "accuracy": 84,
     "life": 843,
@@ -343,6 +381,7 @@
   },
   {
     "level": 39,
+    "physicalDamage": 79.58000183105469,
     "evasion": 1528,
     "accuracy": 88,
     "life": 905,
@@ -352,6 +391,7 @@
   },
   {
     "level": 40,
+    "physicalDamage": 84.26000213623047,
     "evasion": 1597,
     "accuracy": 92,
     "life": 972,
@@ -361,6 +401,7 @@
   },
   {
     "level": 41,
+    "physicalDamage": 89.18000030517578,
     "evasion": 1669,
     "accuracy": 96,
     "life": 1042,
@@ -370,6 +411,7 @@
   },
   {
     "level": 42,
+    "physicalDamage": 94.3499984741211,
     "evasion": 1743,
     "accuracy": 100,
     "life": 1118,
@@ -379,6 +421,7 @@
   },
   {
     "level": 43,
+    "physicalDamage": 99.80000305175781,
     "evasion": 1819,
     "accuracy": 105,
     "life": 1198,
@@ -388,6 +431,7 @@
   },
   {
     "level": 44,
+    "physicalDamage": 105.5199966430664,
     "evasion": 1898,
     "accuracy": 109,
     "life": 1284,
@@ -397,6 +441,7 @@
   },
   {
     "level": 45,
+    "physicalDamage": 111.52999877929688,
     "evasion": 1979,
     "accuracy": 114,
     "life": 1375,
@@ -406,6 +451,7 @@
   },
   {
     "level": 46,
+    "physicalDamage": 117.86000061035156,
     "evasion": 2063,
     "accuracy": 119,
     "life": 1472,
@@ -415,6 +461,7 @@
   },
   {
     "level": 47,
+    "physicalDamage": 124.5,
     "evasion": 2150,
     "accuracy": 124,
     "life": 1575,
@@ -424,6 +471,7 @@
   },
   {
     "level": 48,
+    "physicalDamage": 131.49000549316406,
     "evasion": 2239,
     "accuracy": 129,
     "life": 1685,
@@ -433,6 +481,7 @@
   },
   {
     "level": 49,
+    "physicalDamage": 138.8300018310547,
     "evasion": 2331,
     "accuracy": 135,
     "life": 1802,
@@ -442,6 +491,7 @@
   },
   {
     "level": 50,
+    "physicalDamage": 146.52999877929688,
     "evasion": 2426,
     "accuracy": 140,
     "life": 1927,
@@ -451,6 +501,7 @@
   },
   {
     "level": 51,
+    "physicalDamage": 154.6300048828125,
     "evasion": 2524,
     "accuracy": 146,
     "life": 2059,
@@ -460,6 +511,7 @@
   },
   {
     "level": 52,
+    "physicalDamage": 163.13999938964844,
     "evasion": 2626,
     "accuracy": 152,
     "life": 2200,
@@ -469,6 +521,7 @@
   },
   {
     "level": 53,
+    "physicalDamage": 172.07000732421875,
     "evasion": 2730,
     "accuracy": 159,
     "life": 2350,
@@ -478,6 +531,7 @@
   },
   {
     "level": 54,
+    "physicalDamage": 181.4499969482422,
     "evasion": 2837,
     "accuracy": 165,
     "life": 2509,
@@ -487,6 +541,7 @@
   },
   {
     "level": 55,
+    "physicalDamage": 191.3000030517578,
     "evasion": 2948,
     "accuracy": 172,
     "life": 2678,
@@ -496,6 +551,7 @@
   },
   {
     "level": 56,
+    "physicalDamage": 201.6300048828125,
     "evasion": 3063,
     "accuracy": 179,
     "life": 2858,
@@ -505,6 +561,7 @@
   },
   {
     "level": 57,
+    "physicalDamage": 212.47999572753906,
     "evasion": 3180,
     "accuracy": 187,
     "life": 3050,
@@ -514,6 +571,7 @@
   },
   {
     "level": 58,
+    "physicalDamage": 223.8699951171875,
     "evasion": 3302,
     "accuracy": 195,
     "life": 3253,
@@ -523,6 +581,7 @@
   },
   {
     "level": 59,
+    "physicalDamage": 235.8300018310547,
     "evasion": 3427,
     "accuracy": 203,
     "life": 3469,
@@ -532,6 +591,7 @@
   },
   {
     "level": 60,
+    "physicalDamage": 248.3699951171875,
     "evasion": 3556,
     "accuracy": 211,
     "life": 3698,
@@ -541,6 +601,7 @@
   },
   {
     "level": 61,
+    "physicalDamage": 261.5299987792969,
     "evasion": 3689,
     "accuracy": 220,
     "life": 3942,
@@ -550,6 +611,7 @@
   },
   {
     "level": 62,
+    "physicalDamage": 275.3299865722656,
     "evasion": 3826,
     "accuracy": 229,
     "life": 4201,
@@ -559,6 +621,7 @@
   },
   {
     "level": 63,
+    "physicalDamage": 289.82000732421875,
     "evasion": 3967,
     "accuracy": 238,
     "life": 4476,
@@ -568,6 +631,7 @@
   },
   {
     "level": 64,
+    "physicalDamage": 305.010009765625,
     "evasion": 4112,
     "accuracy": 247,
     "life": 4768,
@@ -577,6 +641,7 @@
   },
   {
     "level": 65,
+    "physicalDamage": 320.94000244140625,
     "evasion": 4262,
     "accuracy": 257,
     "life": 5078,
@@ -586,6 +651,7 @@
   },
   {
     "level": 66,
+    "physicalDamage": 337.6499938964844,
     "evasion": 4416,
     "accuracy": 268,
     "life": 5407,
@@ -595,6 +661,7 @@
   },
   {
     "level": 67,
+    "physicalDamage": 355.17999267578125,
     "evasion": 4575,
     "accuracy": 279,
     "life": 5756,
@@ -604,6 +671,7 @@
   },
   {
     "level": 68,
+    "physicalDamage": 373.54998779296875,
     "evasion": 4739,
     "accuracy": 290,
     "life": 6127,
@@ -613,6 +681,7 @@
   },
   {
     "level": 69,
+    "physicalDamage": 392.80999755859375,
     "evasion": 4907,
     "accuracy": 301,
     "life": 6520,
@@ -622,6 +691,7 @@
   },
   {
     "level": 70,
+    "physicalDamage": 413.010009765625,
     "evasion": 5081,
     "accuracy": 314,
     "life": 6937,
@@ -631,6 +701,7 @@
   },
   {
     "level": 71,
+    "physicalDamage": 434.17999267578125,
     "evasion": 5260,
     "accuracy": 326,
     "life": 7380,
@@ -640,6 +711,7 @@
   },
   {
     "level": 72,
+    "physicalDamage": 456.3699951171875,
     "evasion": 5444,
     "accuracy": 339,
     "life": 7850,
@@ -649,6 +721,7 @@
   },
   {
     "level": 73,
+    "physicalDamage": 479.6199951171875,
     "evasion": 5633,
     "accuracy": 352,
     "life": 8348,
@@ -658,6 +731,7 @@
   },
   {
     "level": 74,
+    "physicalDamage": 504,
     "evasion": 5828,
     "accuracy": 366,
     "life": 8876,
@@ -667,6 +741,7 @@
   },
   {
     "level": 75,
+    "physicalDamage": 529.5399780273438,
     "evasion": 6029,
     "accuracy": 381,
     "life": 9436,
@@ -676,6 +751,7 @@
   },
   {
     "level": 76,
+    "physicalDamage": 556.2999877929688,
     "evasion": 6235,
     "accuracy": 396,
     "life": 10030,
@@ -685,6 +761,7 @@
   },
   {
     "level": 77,
+    "physicalDamage": 584.3499755859375,
     "evasion": 6448,
     "accuracy": 412,
     "life": 10660,
@@ -694,6 +771,7 @@
   },
   {
     "level": 78,
+    "physicalDamage": 613.72998046875,
     "evasion": 6667,
     "accuracy": 428,
     "life": 11328,
@@ -703,6 +781,7 @@
   },
   {
     "level": 79,
+    "physicalDamage": 644.5,
     "evasion": 6892,
     "accuracy": 444,
     "life": 12036,
@@ -712,6 +791,7 @@
   },
   {
     "level": 80,
+    "physicalDamage": 676.75,
     "evasion": 7124,
     "accuracy": 462,
     "life": 12787,
@@ -721,6 +801,7 @@
   },
   {
     "level": 81,
+    "physicalDamage": 710.52001953125,
     "evasion": 7362,
     "accuracy": 480,
     "life": 13582,
@@ -730,6 +811,7 @@
   },
   {
     "level": 82,
+    "physicalDamage": 745.8900146484375,
     "evasion": 7608,
     "accuracy": 499,
     "life": 14425,
@@ -739,6 +821,7 @@
   },
   {
     "level": 83,
+    "physicalDamage": 782.9400024414062,
     "evasion": 7860,
     "accuracy": 518,
     "life": 15319,
@@ -748,6 +831,7 @@
   },
   {
     "level": 84,
+    "physicalDamage": 821.72998046875,
     "evasion": 8120,
     "accuracy": 538,
     "life": 16265,
@@ -757,6 +841,7 @@
   },
   {
     "level": 85,
+    "physicalDamage": 862.3599853515625,
     "evasion": 8388,
     "accuracy": 559,
     "life": 17268,
@@ -766,6 +851,7 @@
   },
   {
     "level": 86,
+    "physicalDamage": 904.9000244140625,
     "evasion": 8663,
     "accuracy": 580,
     "life": 18331,
@@ -775,6 +861,7 @@
   },
   {
     "level": 87,
+    "physicalDamage": 949.4400024414062,
     "evasion": 8946,
     "accuracy": 603,
     "life": 19457,
@@ -784,6 +871,7 @@
   },
   {
     "level": 88,
+    "physicalDamage": 996.0700073242188,
     "evasion": 9237,
     "accuracy": 626,
     "life": 20649,
@@ -793,6 +881,7 @@
   },
   {
     "level": 89,
+    "physicalDamage": 1044.8900146484375,
     "evasion": 9536,
     "accuracy": 650,
     "life": 21913,
@@ -802,6 +891,7 @@
   },
   {
     "level": 90,
+    "physicalDamage": 1096,
     "evasion": 9844,
     "accuracy": 675,
     "life": 23250,
@@ -811,6 +901,7 @@
   },
   {
     "level": 91,
+    "physicalDamage": 1149.5,
     "evasion": 10160,
     "accuracy": 701,
     "life": 24667,
@@ -820,6 +911,7 @@
   },
   {
     "level": 92,
+    "physicalDamage": 1205.5,
     "evasion": 10486,
     "accuracy": 728,
     "life": 26168,
@@ -829,6 +921,7 @@
   },
   {
     "level": 93,
+    "physicalDamage": 1264.1099853515625,
     "evasion": 10821,
     "accuracy": 755,
     "life": 27756,
@@ -838,6 +931,7 @@
   },
   {
     "level": 94,
+    "physicalDamage": 1325.449951171875,
     "evasion": 11165,
     "accuracy": 784,
     "life": 29438,
@@ -847,6 +941,7 @@
   },
   {
     "level": 95,
+    "physicalDamage": 1389.6400146484375,
     "evasion": 11519,
     "accuracy": 814,
     "life": 31220,
@@ -856,6 +951,7 @@
   },
   {
     "level": 96,
+    "physicalDamage": 1456.8199462890625,
     "evasion": 11883,
     "accuracy": 845,
     "life": 33105,
@@ -865,6 +961,7 @@
   },
   {
     "level": 97,
+    "physicalDamage": 1527.1199951171875,
     "evasion": 12258,
     "accuracy": 877,
     "life": 35101,
@@ -874,6 +971,7 @@
   },
   {
     "level": 98,
+    "physicalDamage": 1600.6800537109375,
     "evasion": 12643,
     "accuracy": 910,
     "life": 37214,
@@ -883,6 +981,7 @@
   },
   {
     "level": 99,
+    "physicalDamage": 1677.6400146484375,
     "evasion": 13038,
     "accuracy": 945,
     "life": 39450,
@@ -892,6 +991,7 @@
   },
   {
     "level": 100,
+    "physicalDamage": 1758.1700439453125,
     "evasion": 13445,
     "accuracy": 980,
     "life": 41817,

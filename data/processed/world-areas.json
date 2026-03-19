@@ -2706,8 +2706,8 @@
       "no_tempests",
       "area_with_water"
     ],
-    "idleTimeMultiplier": 1,
-    "encounterCount": 10
+    "idleTimeMultiplier": 0.5,
+    "encounterCount": 5
   },
   {
     "id": "1_SideArea1_1",
@@ -3336,8 +3336,8 @@
     "tags": [
       "area_with_water"
     ],
-    "idleTimeMultiplier": 1,
-    "encounterCount": 10
+    "idleTimeMultiplier": 0.8,
+    "encounterCount": 8
   },
   {
     "id": "Descent1",
@@ -3719,8 +3719,8 @@
     "tags": [
       "area_with_water"
     ],
-    "idleTimeMultiplier": 1,
-    "encounterCount": 10
+    "idleTimeMultiplier": 0.9,
+    "encounterCount": 12
   },
   {
     "id": "Descent3",
@@ -4073,8 +4073,8 @@
     "tags": [
       "has_road_area"
     ],
-    "idleTimeMultiplier": 1,
-    "encounterCount": 10
+    "idleTimeMultiplier": 1.2,
+    "encounterCount": 12
   },
   {
     "id": "Descent5",
@@ -4487,8 +4487,8 @@
     ],
     "bossMonsters": [],
     "tags": [],
-    "idleTimeMultiplier": 1,
-    "encounterCount": 10
+    "idleTimeMultiplier": 0,
+    "encounterCount": 0
   },
   {
     "id": "1_1_11_2",

@@ -1,0 +1,30 @@
+{
+  "_comment": "Game-specific overrides for skills. clearRating/singleTargetRating: 1-5 scale for idle game calculations.",
+
+  "Fireball": { "clearRating": 3, "singleTargetRating": 3 },
+  "FreezingPulse": { "clearRating": 3, "singleTargetRating": 2 },
+  "Arc": { "clearRating": 4, "singleTargetRating": 2 },
+  "Spark": { "clearRating": 4, "singleTargetRating": 1 },
+  "IceNova": { "clearRating": 4, "singleTargetRating": 2 },
+  "FrostBolt": { "clearRating": 3, "singleTargetRating": 2 },
+  "EssenceDrain": { "clearRating": 2, "singleTargetRating": 4 },
+  "Contagion": { "clearRating": 5, "singleTargetRating": 1 },
+  "RaisedZombie": { "clearRating": 3, "singleTargetRating": 2 },
+  "SummonRagingSpirits": { "clearRating": 3, "singleTargetRating": 3 },
+  "SummonSkeletons": { "clearRating": 3, "singleTargetRating": 3 },
+
+  "GroundSlam": { "clearRating": 3, "singleTargetRating": 2 },
+  "HeavyStrike": { "clearRating": 1, "singleTargetRating": 4 },
+  "Cleave": { "clearRating": 3, "singleTargetRating": 2 },
+  "MoltenStrike": { "clearRating": 2, "singleTargetRating": 3 },
+  "LaceratingSlash": { "clearRating": 3, "singleTargetRating": 2 },
+  "EarthquakeTriggered": { "clearRating": 4, "singleTargetRating": 3 },
+  "DoubleStrike": { "clearRating": 2, "singleTargetRating": 4 },
+
+  "SplitArrow": { "clearRating": 4, "singleTargetRating": 1 },
+  "BurningArrow": { "clearRating": 2, "singleTargetRating": 3 },
+  "RainOfArrows": { "clearRating": 3, "singleTargetRating": 2 },
+  "LightningArrow": { "clearRating": 5, "singleTargetRating": 2 },
+  "CausticArrow": { "clearRating": 3, "singleTargetRating": 2 },
+  "ToxicRain": { "clearRating": 4, "singleTargetRating": 3 }
+}

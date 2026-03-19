@@ -1,0 +1,69 @@
+{
+  "_comment": "Game-specific overrides for world areas. idleTimeMultiplier affects how fast the zone is cleared. encounterCount is number of packs before boss.",
+
+  "1_1_1": {
+    "_name": "The Twilight Strand",
+    "idleTimeMultiplier": 0.5,
+    "encounterCount": 5
+  },
+  "1_1_2": {
+    "_name": "The Coast",
+    "idleTimeMultiplier": 0.8,
+    "encounterCount": 8
+  },
+  "1_1_3": {
+    "_name": "The Mud Flats",
+    "idleTimeMultiplier": 1.0,
+    "encounterCount": 10
+  },
+  "1_1_4": {
+    "_name": "The Submerged Passage",
+    "idleTimeMultiplier": 1.0,
+    "encounterCount": 10
+  },
+  "1_1_5": {
+    "_name": "The Ledge",
+    "idleTimeMultiplier": 0.9,
+    "encounterCount": 12
+  },
+  "1_1_town": {
+    "_name": "Lioneye's Watch",
+    "idleTimeMultiplier": 0,
+    "encounterCount": 0
+  },
+  "1_1_6": {
+    "_name": "The Climb",
+    "idleTimeMultiplier": 1.0,
+    "encounterCount": 10
+  },
+  "1_1_7": {
+    "_name": "The Lower Prison",
+    "idleTimeMultiplier": 1.1,
+    "encounterCount": 10
+  },
+  "1_1_8": {
+    "_name": "The Upper Prison",
+    "idleTimeMultiplier": 1.2,
+    "encounterCount": 12
+  },
+  "1_1_9": {
+    "_name": "Prisoner's Gate",
+    "idleTimeMultiplier": 1.0,
+    "encounterCount": 10
+  },
+  "1_1_10": {
+    "_name": "The Ship Graveyard",
+    "idleTimeMultiplier": 1.1,
+    "encounterCount": 10
+  },
+  "1_1_11": {
+    "_name": "The Cavern of Wrath",
+    "idleTimeMultiplier": 1.3,
+    "encounterCount": 12
+  },
+  "1_1_12": {
+    "_name": "The Cavern of Anger",
+    "idleTimeMultiplier": 1.4,
+    "encounterCount": 15
+  }
+}

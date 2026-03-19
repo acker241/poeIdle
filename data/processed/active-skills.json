@@ -1035,8 +1035,8 @@
       }
     },
     "color": "b",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 3,
+    "singleTargetRating": 3,
     "isWeaponAttack": false,
     "isSpell": true
   },
@@ -2072,8 +2072,8 @@
       }
     },
     "color": "b",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 4,
+    "singleTargetRating": 2,
     "isWeaponAttack": false,
     "isSpell": true
   },
@@ -9057,8 +9057,8 @@
       }
     },
     "color": "r",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 3,
+    "singleTargetRating": 2,
     "isWeaponAttack": true,
     "isSpell": false
   },
@@ -10226,8 +10226,8 @@
       }
     },
     "color": "r",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 3,
+    "singleTargetRating": 2,
     "isWeaponAttack": true,
     "isSpell": false
   },
@@ -13281,8 +13281,8 @@
       }
     },
     "color": "g",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 2,
+    "singleTargetRating": 4,
     "isWeaponAttack": true,
     "isSpell": false
   },
@@ -30851,8 +30851,8 @@
       }
     },
     "color": "g",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 4,
+    "singleTargetRating": 1,
     "isWeaponAttack": true,
     "isSpell": false
   },
@@ -37217,8 +37217,8 @@
       }
     },
     "color": "g",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 3,
+    "singleTargetRating": 2,
     "isWeaponAttack": true,
     "isSpell": false
   },
@@ -45721,8 +45721,8 @@
       }
     },
     "color": "b",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 4,
+    "singleTargetRating": 1,
     "isWeaponAttack": false,
     "isSpell": true
   },
@@ -58813,8 +58813,8 @@
       }
     },
     "color": "b",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 3,
+    "singleTargetRating": 2,
     "isWeaponAttack": false,
     "isSpell": true
   },
@@ -74148,8 +74148,8 @@
       }
     },
     "color": "b",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 3,
+    "singleTargetRating": 3,
     "isWeaponAttack": false,
     "isSpell": true
   },
@@ -76785,8 +76785,8 @@
       }
     },
     "color": "r",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 1,
+    "singleTargetRating": 4,
     "isWeaponAttack": true,
     "isSpell": false
   },
@@ -78645,8 +78645,8 @@
       }
     },
     "color": "g",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 3,
+    "singleTargetRating": 2,
     "isWeaponAttack": true,
     "isSpell": false
   },
@@ -89391,8 +89391,8 @@
       }
     },
     "color": "g",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 5,
+    "singleTargetRating": 2,
     "isWeaponAttack": true,
     "isSpell": false
   },
@@ -99644,8 +99644,8 @@
       }
     },
     "color": "g",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 2,
+    "singleTargetRating": 3,
     "isWeaponAttack": true,
     "isSpell": false
   },
@@ -122027,8 +122027,8 @@
       }
     },
     "color": "b",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 4,
+    "singleTargetRating": 2,
     "isWeaponAttack": false,
     "isSpell": true
   },
@@ -177845,8 +177845,8 @@
       }
     },
     "color": "r",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 2,
+    "singleTargetRating": 3,
     "isWeaponAttack": true,
     "isSpell": false
   },
@@ -247164,8 +247164,8 @@
       }
     },
     "color": "b",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 5,
+    "singleTargetRating": 1,
     "isWeaponAttack": false,
     "isSpell": true
   },
@@ -253069,8 +253069,8 @@
       }
     },
     "color": "b",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 2,
+    "singleTargetRating": 4,
     "isWeaponAttack": false,
     "isSpell": true
   },
@@ -259891,8 +259891,8 @@
       }
     },
     "color": "b",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 3,
+    "singleTargetRating": 2,
     "isWeaponAttack": false,
     "isSpell": true
   },
@@ -292062,8 +292062,8 @@
       }
     },
     "color": "g",
-    "clearRating": null,
-    "singleTargetRating": null,
+    "clearRating": 4,
+    "singleTargetRating": 3,
     "isWeaponAttack": true,
     "isSpell": false
   },
