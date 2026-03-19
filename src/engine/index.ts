@@ -23,8 +23,23 @@ export * from "./stats";
 // Damage
 export * from "./damage";
 
-// Defense
-export * from "./defense";
+// Defense (excluding functions already exported from damage)
+export {
+  calculateArmourReduction as defenseArmourReduction,
+  applyArmour as defenseApplyArmour,
+} from "./defense/armour";
+export * from "./defense/evasion";
+export {
+  calculateEffectiveResistance,
+  DEFAULT_RESISTANCE_CAP,
+  DEFAULT_CHAOS_RESISTANCE_CAP,
+  getDefaultResistancePenalty,
+  applyResistance as defenseApplyResistance,
+} from "./defense/resistances";
+export * from "./defense/block";
+export * from "./defense/energy-shield";
+export * from "./defense/life-mana";
+export * from "./defense/suppression";
 
 // Ailments
 export * from "./ailments";

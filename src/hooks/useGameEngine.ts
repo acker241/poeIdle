@@ -38,7 +38,10 @@ function pickRandomEnemy(rng: SeededRng) {
   return ACT1_ENEMIES[idx];
 }
 
-export function useGameEngine() {
+export function useGameEngine(config: {
+  characterName: string;
+  characterClass: CharacterClass;
+}) {
   const [gameState, setGameState] = useState<GameState>({
     character: null,
     characterState: null,
@@ -78,8 +81,8 @@ export function useGameEngine() {
 
   // Initialize the engine
   useEffect(() => {
-    // Create a Marauder
-    const charState = createCharacter("Exile", CharacterClass.Marauder);
+    // Create character from config
+    const charState = createCharacter(config.characterName, config.characterClass);
     charStateRef.current = charState;
 
     // Resolve stats
@@ -177,7 +180,7 @@ export function useGameEngine() {
     }, TICK_DURATION);
 
     return () => clearInterval(intervalId);
-  }, [resolveChar, spawnEnemy]);
+  }, [config.characterName, config.characterClass, resolveChar, spawnEnemy]);
 
   return gameState;
 }

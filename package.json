@@ -8,7 +8,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "node --experimental-strip-types scripts/prebuild.ts && tsc -b && vite build",
+    "start": "node --experimental-strip-types server.ts",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",

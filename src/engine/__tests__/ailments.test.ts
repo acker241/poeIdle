@@ -153,7 +153,7 @@ describe("chill", () => {
     const big = calculateChill(25, 100, 0, "ice_nova");
     expect(small).not.toBeNull();
     expect(big).not.toBeNull();
-    expect(big!.effect).toBeGreaterThan(small!.effect);
+    expect(big!.effect!).toBeGreaterThan(small!.effect!);
   });
 
   it("has correct type", () => {
@@ -194,6 +194,6 @@ describe("shock", () => {
     const big = calculateShock(40, 100, 0, "arc");
     expect(small).not.toBeNull();
     expect(big).not.toBeNull();
-    expect(big!.effect).toBeGreaterThan(small!.effect);
+    expect(big!.effect!).toBeGreaterThan(small!.effect!);
   });
 });
