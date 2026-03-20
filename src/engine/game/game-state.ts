@@ -3,6 +3,8 @@ import { CharacterClass } from "../types/character";
 import { createCharacter } from "../character/character-factory";
 import { ACT1_ZONES, type ZoneDef } from "../data/zones/act1-zones";
 import { ACT1_QUEST_MAP, type QuestReward } from "../data/quests/act1-quests";
+import { type FlaskState, createLifeFlask, createManaFlask } from "../items/flasks";
+import { type DisplayEquipment, EMPTY_EQUIPMENT, getStarterWeapon } from "../items/starter-gear";
 
 // ---------------------------------------------------------------------------
 // Game log
@@ -31,7 +33,10 @@ export interface IdleGameState {
   totalKills: number;
   totalXp: number;
   totalDeaths: number;
-  currentView: "combat" | "tree" | "town" | "quest_reward";
+  currentView: "combat" | "tree" | "town" | "equipment" | "quest_reward";
+  strategy: "advance" | "farm";
+  flasks: FlaskState[];
+  equipment: DisplayEquipment;
   act1Complete: boolean;
 }
 
@@ -80,6 +85,9 @@ export function createInitialGameState(
     totalXp: 0,
     totalDeaths: 0,
     currentView: "combat",
+    strategy: "advance",
+    flasks: [createLifeFlask(0), createManaFlask(0)],
+    equipment: { ...EMPTY_EQUIPMENT, weapon: getStarterWeapon(charClass.toString()) },
     act1Complete: false,
   };
 }
@@ -258,6 +266,23 @@ export function canProgressToNextZone(state: IdleGameState): boolean {
   if (zone.boss && !state.bossKilled) return false;
 
   return true;
+}
+
+/** Toggle strategy between advance and farm. */
+export function setStrategy(state: IdleGameState, strategy: "advance" | "farm"): IdleGameState {
+  return { ...state, strategy };
+}
+
+/** Reset zone encounters for farming (re-run the zone). */
+export function resetZoneForFarming(state: IdleGameState): IdleGameState {
+  const zone = ACT1_ZONES[state.currentZoneIndex];
+  if (!zone) return state;
+  return {
+    ...state,
+    encountersRemaining: zone.encountersToComplete,
+    isFightingBoss: false,
+    gameLog: addLog(state, `Farming ${zone.name}...`, "zone"),
+  };
 }
 
 /** Dismiss pending quest rewards (player acknowledged them). */

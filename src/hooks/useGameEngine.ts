@@ -23,9 +23,11 @@ import {
   applyDeath,
   canProgressToNextZone,
   recordLevelUp,
+  resetZoneForFarming,
   DEFAULT_SKILL_PER_CLASS,
   type IdleGameState,
 } from "@/engine/game/game-state";
+import { tickFlasks, type FlaskState } from "@/engine/items/flasks";
 
 const emptyTree: TreeGraph = {
   nodes: new Map(),
@@ -48,7 +50,8 @@ export interface UseGameEngineReturn {
   currentEnemy: EnemyDef | null;
   skill: ResolvedSkill | null;
   running: boolean;
-  setView: (view: "combat" | "tree" | "town") => void;
+  setView: (view: "combat" | "tree" | "town" | "equipment") => void;
+  setStrategy: (strategy: "advance" | "farm") => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -147,8 +150,13 @@ export function useGameEngine(config: {
   );
 
   // --- setView callback (exposed to UI) ---
-  const setView = useCallback((view: "combat" | "tree" | "town") => {
+  const setView = useCallback((view: "combat" | "tree" | "town" | "equipment") => {
     gameStateRef.current = { ...gameStateRef.current, currentView: view };
+  }, []);
+
+  // --- setStrategy callback ---
+  const setStrategy = useCallback((strategy: "advance" | "farm") => {
+    gameStateRef.current = { ...gameStateRef.current, strategy };
   }, []);
 
   // --- Initialize + run the game loop ---
@@ -223,6 +231,26 @@ export function useGameEngine(config: {
       const result = combatTick(combat, player, activeSkill, rngRef.current);
       combatRef.current = result.newState;
 
+      // --- Flask tick ---
+      const enemyDied = result.enemyDefeated;
+      const flaskResult = tickFlasks(
+        gs.flasks,
+        result.newState.playerCurrentLife,
+        player.maxLife,
+        result.newState.playerCurrentMana,
+        player.maxMana,
+        result.newState.elapsedMs,
+        enemyDied,
+      );
+      gs = { ...gs, flasks: flaskResult.flasks };
+      if (flaskResult.lifeRestored > 0 || flaskResult.manaRestored > 0) {
+        combatRef.current = {
+          ...combatRef.current!,
+          playerCurrentLife: Math.min(player.maxLife, combatRef.current!.playerCurrentLife + flaskResult.lifeRestored),
+          playerCurrentMana: Math.min(player.maxMana, combatRef.current!.playerCurrentMana + flaskResult.manaRestored),
+        };
+      }
+
       // Append events
       if (result.events.length > 0) {
         const combined = [...eventsRef.current, ...result.events];
@@ -269,12 +297,20 @@ export function useGameEngine(config: {
         if (canProgressToNextZone(gs)) {
           // Process on_clear triggers before advancing
           gs = processQuestTriggers(gs, "on_clear");
-          gs = advanceZone(gs);
-          gameStateRef.current = gs;
 
-          const newZone = ACT1_ZONES[gs.currentZoneIndex];
-          if (newZone && !newZone.isTown && !gs.act1Complete) {
-            spawnEnemy(newZone, resolvedCharRef.current!);
+          if (gs.strategy === "farm") {
+            // Stay in current zone, reset encounters
+            gs = resetZoneForFarming(gs);
+            gameStateRef.current = gs;
+            spawnEnemy(zone, resolvedCharRef.current!);
+          } else {
+            gs = advanceZone(gs);
+            gameStateRef.current = gs;
+
+            const newZone = ACT1_ZONES[gs.currentZoneIndex];
+            if (newZone && !newZone.isTown && !gs.act1Complete) {
+              spawnEnemy(newZone, resolvedCharRef.current!);
+            }
           }
         } else if (gs.encountersRemaining <= 0 && zone.boss && !gs.bossKilled) {
           // All encounters done, time for boss
@@ -325,5 +361,6 @@ export function useGameEngine(config: {
   return {
     ...snapshot,
     setView,
+    setStrategy,
   };
 }

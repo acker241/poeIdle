@@ -6,7 +6,7 @@ import { DamageType } from "../types/damage";
 import { GemTag } from "../types/skills";
 import type { SeededRng } from "../utils/rng";
 import { getStatValue } from "../stats/stat-calculator";
-import { STAT_ACCURACY, STAT_EVASION, STAT_BLOCK_CHANCE, STAT_CRIT_CHANCE, STAT_CRIT_MULTIPLIER } from "../stats/stat-registry";
+import { STAT_ACCURACY, STAT_EVASION, STAT_BLOCK_CHANCE, STAT_CRIT_CHANCE, STAT_CRIT_MULTIPLIER, STAT_LIFE_REGEN, STAT_MANA_REGEN } from "../stats/stat-registry";
 import { resolveAttackHit } from "./accuracy";
 import { resolveBlock } from "../defense/block";
 import { calculateHitDamage, type HitContext } from "../damage/hit-damage";
@@ -181,16 +181,16 @@ export function combatTick(
   newState = { ...newState, enemyAttackAccumulator: enemyAccum };
 
   // --- Player regen ---
-  const lifeRegen = getStatValue(player.stats, "life_regeneration_rate");
+  // Base life regen: 1.5% of max life per second (PoE default for idle game)
+  const lifeRegenStat = getStatValue(player.stats, STAT_LIFE_REGEN);
+  const effectiveLifeRegen = lifeRegenStat > 0 ? lifeRegenStat : player.maxLife * 0.015;
+  // Base mana regen: 1.75% of max mana per second
+  const manaRegenStat = getStatValue(player.stats, STAT_MANA_REGEN);
+  const effectiveManaRegen = manaRegenStat > 0 ? manaRegenStat : player.maxMana * 0.0175;
   newState = {
     ...newState,
-    playerCurrentLife: tickLifeRegen(newState.playerCurrentLife, player.maxLife, lifeRegen, TICK_DURATION),
-    playerCurrentMana: tickManaRegen(
-      newState.playerCurrentMana,
-      player.maxMana,
-      player.maxMana * 0.0175, // base 1.75% mana regen
-      TICK_DURATION,
-    ),
+    playerCurrentLife: tickLifeRegen(newState.playerCurrentLife, player.maxLife, effectiveLifeRegen, TICK_DURATION),
+    playerCurrentMana: tickManaRegen(newState.playerCurrentMana, player.maxMana, effectiveManaRegen, TICK_DURATION),
   };
 
   // --- Check outcomes ---

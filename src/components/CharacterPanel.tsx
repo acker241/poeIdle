@@ -1,6 +1,7 @@
 import type { ResolvedCharacter, CharacterState } from "@/engine/types/character";
 import type { ResolvedSkill } from "@/engine/types/skills";
 import type { CombatState } from "@/engine/types/combat";
+import type { FlaskState } from "@/engine/items/flasks";
 
 interface CharacterPanelProps {
   character: ResolvedCharacter | null;
@@ -13,6 +14,7 @@ interface CharacterPanelProps {
   zoneName?: string;
   availableSkillPoints?: number;
   questsCompleted?: number;
+  flasks?: FlaskState[];
 }
 
 function HealthBar({
@@ -73,6 +75,7 @@ export function CharacterPanel({
   zoneName,
   availableSkillPoints,
   questsCompleted,
+  flasks,
 }: CharacterPanelProps) {
   if (!character || !characterState) {
     return (
@@ -139,6 +142,36 @@ export function CharacterPanel({
             />
           )}
         </div>
+
+        {/* Flasks */}
+        {flasks && flasks.length > 0 && (
+          <div className="space-y-1.5">
+            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              Flasks
+            </div>
+            {flasks.map((f) => {
+              const chargesPct = f.maxCharges > 0 ? (f.currentCharges / f.maxCharges) * 100 : 0;
+              const flaskColor = f.type === "life" ? "bg-red-500" : f.type === "mana" ? "bg-blue-500" : "bg-purple-500";
+              const textColor = f.type === "life" ? "text-red-400" : f.type === "mana" ? "text-blue-400" : "text-purple-400";
+              return (
+                <div key={f.id} className="rounded border border-border bg-zinc-900/50 px-2 py-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className={`font-medium ${textColor}`}>{f.name}</span>
+                    <span className="font-mono text-muted-foreground">
+                      {f.currentCharges}/{f.maxCharges}
+                    </span>
+                  </div>
+                  <div className="h-1.5 mt-1 rounded-full bg-zinc-800 overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-200 rounded-full ${flaskColor}`}
+                      style={{ width: `${chargesPct}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Resistances */}
         <div className="space-y-1">

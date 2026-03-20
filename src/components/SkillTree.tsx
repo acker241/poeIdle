@@ -53,63 +53,63 @@ interface NodeStyle {
 
 const NODE_STYLES: Record<string, NodeStyle> = {
   small: {
-    radius: 8,
+    radius: 40,
     fill: "#555555",
     stroke: "#888888",
     allocatedFill: "#b0a070",
     allocatedStroke: "#e0d0a0",
   },
   notable: {
-    radius: 12,
+    radius: 60,
     fill: "#997a3d",
     stroke: "#c9a84c",
     allocatedFill: "#d4af37",
     allocatedStroke: "#ffe066",
   },
   keystone: {
-    radius: 16,
+    radius: 80,
     fill: "#5c3d99",
     stroke: "#8b6cc5",
     allocatedFill: "#9b6ed8",
     allocatedStroke: "#c9a8f0",
   },
   mastery: {
-    radius: 10,
+    radius: 50,
     fill: "#333333",
     stroke: "#666666",
     allocatedFill: "#888888",
     allocatedStroke: "#bbbbbb",
   },
   jewel_socket: {
-    radius: 10,
+    radius: 50,
     fill: "#2d5a27",
     stroke: "#4a8c41",
     allocatedFill: "#4daa3d",
     allocatedStroke: "#7ddf6a",
   },
   class_start: {
-    radius: 20,
+    radius: 100,
     fill: "#1a4a6e",
     stroke: "#3498db",
     allocatedFill: "#3498db",
     allocatedStroke: "#6fc0f0",
   },
   ascendancy_small: {
-    radius: 8,
+    radius: 40,
     fill: "#6e1a1a",
     stroke: "#993333",
     allocatedFill: "#cc4444",
     allocatedStroke: "#ff7777",
   },
   ascendancy_notable: {
-    radius: 12,
+    radius: 60,
     fill: "#8b1a1a",
     stroke: "#cc3333",
     allocatedFill: "#ee5555",
     allocatedStroke: "#ff9999",
   },
   ascendancy_start: {
-    radius: 10,
+    radius: 50,
     fill: "#6e1a1a",
     stroke: "#993333",
     allocatedFill: "#cc4444",
@@ -140,7 +140,7 @@ function hitTest(
     const dx = worldX - n.x;
     const dy = worldY - n.y;
     // Use a slightly larger hit radius for usability
-    const hitRadius = style.radius + 4;
+    const hitRadius = style.radius + 20;
     if (dx * dx + dy * dy <= hitRadius * hitRadius) {
       return n;
     }
@@ -224,48 +224,23 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
     if (!treeData || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
+    const b = treeData.bounds;
 
-    // Find starting position: class start node or center of tree
-    let centerX = 0;
-    let centerY = 0;
+    // Center on the whole tree
+    const centerX = (b.minX + b.maxX) / 2;
+    const centerY = (b.minY + b.maxY) / 2;
 
-    if (characterClass) {
-      const cls = treeData.classes.find(
-        (c) => c.name.toLowerCase() === characterClass.toLowerCase(),
-      );
-      if (cls?.startNodeId) {
-        const startNode = nodeMapRef.current.get(cls.startNodeId);
-        if (startNode) {
-          centerX = startNode.x;
-          centerY = startNode.y;
-        }
-      }
-    }
+    // Calculate scale to fit whole tree in view
+    const treeWidth = b.maxX - b.minX;
+    const treeHeight = b.maxY - b.minY;
+    const scaleX = canvas.width / treeWidth;
+    const scaleY = canvas.height / treeHeight;
+    const fitScale = Math.min(scaleX, scaleY) * 0.8;
 
-    // If no class specified or not found, try Marauder or use bounds center
-    if (centerX === 0 && centerY === 0) {
-      const marauder = treeData.classes.find(
-        (c) => c.name.toLowerCase() === "marauder",
-      );
-      if (marauder?.startNodeId) {
-        const startNode = nodeMapRef.current.get(marauder.startNodeId);
-        if (startNode) {
-          centerX = startNode.x;
-          centerY = startNode.y;
-        }
-      }
-    }
-
-    if (centerX === 0 && centerY === 0) {
-      const b = treeData.bounds;
-      centerX = (b.minX + b.maxX) / 2;
-      centerY = (b.minY + b.maxY) / 2;
-    }
-
-    const scale = scaleRef.current;
+    scaleRef.current = fitScale;
     offsetRef.current = {
-      x: canvas.width / 2 - centerX * scale,
-      y: canvas.height / 2 - centerY * scale,
+      x: canvas.width / 2 - centerX * fitScale,
+      y: canvas.height / 2 - centerY * fitScale,
     };
 
     needsRenderRef.current = true;
@@ -318,9 +293,7 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
 
     // --- Draw connections ---
     // Unallocated connections first
-    ctx.lineWidth = 2 / scale; // keep line width roughly constant on screen
-    const minLineWidth = 1;
-    if (ctx.lineWidth < minLineWidth) ctx.lineWidth = minLineWidth;
+    ctx.lineWidth = 6;
 
     ctx.strokeStyle = CONNECTION_COLOR;
     ctx.beginPath();
@@ -341,8 +314,7 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
     // Allocated connections (gold)
     if (allocated.size > 0) {
       ctx.strokeStyle = ALLOCATED_CONNECTION_COLOR;
-      ctx.lineWidth = 3 / scale;
-      if (ctx.lineWidth < minLineWidth) ctx.lineWidth = minLineWidth;
+      ctx.lineWidth = 10;
       ctx.beginPath();
       for (const node of visibleNodes) {
         if (!allocated.has(node.id)) continue;
@@ -382,13 +354,25 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
       ctx.stroke();
     }
 
+    // --- Draw node labels for notable/keystone when zoomed in ---
+    if (scale > 0.08) {
+      ctx.font = "24px sans-serif";
+      ctx.fillStyle = "#ccc";
+      ctx.textAlign = "center";
+      for (const node of visibleNodes) {
+        if (node.type === "notable" || node.type === "keystone") {
+          const style = getNodeStyle(node.type);
+          ctx.fillText(node.name, node.x, node.y + style.radius + 30);
+        }
+      }
+    }
+
     // Draw connections to off-screen allocated neighbors (so gold edges don't disappear)
     // This is handled by the padding above, but add allocated nodes that are off-screen
     // but connected to on-screen allocated nodes
     if (allocated.size > 0) {
       ctx.strokeStyle = ALLOCATED_CONNECTION_COLOR;
-      ctx.lineWidth = 3 / scale;
-      if (ctx.lineWidth < minLineWidth) ctx.lineWidth = minLineWidth;
+      ctx.lineWidth = 10;
       ctx.beginPath();
       for (const node of visibleNodes) {
         if (!allocated.has(node.id)) continue;
@@ -565,9 +549,9 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
     const mouseY = e.clientY - rect.top;
 
     const oldScale = scaleRef.current;
-    const zoomFactor = e.deltaY < 0 ? 1.1 : 1 / 1.1;
+    const zoomFactor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
     let newScale = oldScale * zoomFactor;
-    newScale = Math.max(0.05, Math.min(2.0, newScale));
+    newScale = Math.max(0.01, Math.min(2.0, newScale));
 
     // Zoom toward the mouse cursor
     const ratio = newScale / oldScale;

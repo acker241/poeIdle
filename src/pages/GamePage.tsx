@@ -2,6 +2,7 @@ import { useGameEngine } from "@/hooks/useGameEngine";
 import { CharacterPanel } from "@/components/CharacterPanel";
 import { CombatLog } from "@/components/CombatLog";
 import { EnemyPanel } from "@/components/EnemyPanel";
+import { EquipmentPanel } from "@/components/EquipmentPanel";
 import { SkillTreePage } from "@/pages/SkillTreePage";
 import { CharacterClass } from "@/engine/types/character";
 import { ACT1_ZONES } from "@/engine/data/zones/act1-zones";
@@ -78,7 +79,7 @@ function ZoneProgressBar({
   const pct = encountersTotal > 0 ? (encountersDone / encountersTotal) * 100 : 100;
 
   return (
-    <div className="px-4 py-2 border-b border-border bg-zinc-950/60">
+    <div className="px-4 py-2">
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-foreground">{zoneName}</span>
@@ -278,6 +279,12 @@ export function GamePage({ characterName, characterClass }: GamePageProps) {
             onClick={() => game.setView("tree")}
           />
           <NavTab
+            label="Equipment"
+            icon="&#128737;"
+            active={gameState.currentView === "equipment"}
+            onClick={() => game.setView("equipment")}
+          />
+          <NavTab
             label="Town"
             icon="&#127968;"
             active={gameState.currentView === "town"}
@@ -306,19 +313,44 @@ export function GamePage({ characterName, characterClass }: GamePageProps) {
         </div>
       </header>
 
-      {/* Zone progress bar */}
-      <ZoneProgressBar
-        zoneName={zone.name}
-        zoneLevel={zone.level}
-        encountersRemaining={gameState.encountersRemaining}
-        encountersTotal={zoneTotal}
-        isBoss={gameState.isFightingBoss}
-        isTown={zone.isTown}
-        act1Complete={gameState.act1Complete}
-      />
+      {/* Zone progress bar + strategy toggle */}
+      <div className="flex items-center border-b border-border bg-zinc-950/60">
+        <div className="flex-1">
+          <ZoneProgressBar
+            zoneName={zone.name}
+            zoneLevel={zone.level}
+            encountersRemaining={gameState.encountersRemaining}
+            encountersTotal={zoneTotal}
+            isBoss={gameState.isFightingBoss}
+            isTown={zone.isTown}
+            act1Complete={gameState.act1Complete}
+          />
+        </div>
+        {!zone.isTown && (
+          <button
+            onClick={() =>
+              game.setStrategy(gameState.strategy === "advance" ? "farm" : "advance")
+            }
+            className={`
+              mx-3 px-3 py-1 text-xs font-semibold rounded-md border transition-colors whitespace-nowrap
+              ${
+                gameState.strategy === "farm"
+                  ? "bg-green-500/15 text-green-400 border-green-500/30 hover:bg-green-500/25"
+                  : "bg-sky-500/15 text-sky-400 border-sky-500/30 hover:bg-sky-500/25"
+              }
+            `}
+          >
+            {gameState.strategy === "farm" ? "Farming" : "Advancing"}
+          </button>
+        )}
+      </div>
 
       {/* Main content area */}
-      {gameState.currentView === "town" ? (
+      {gameState.currentView === "equipment" ? (
+        <main className="flex-1 overflow-hidden bg-zinc-950/50 max-w-lg mx-auto w-full">
+          <EquipmentPanel equipment={gameState.equipment} />
+        </main>
+      ) : gameState.currentView === "town" ? (
         <main className="flex-1 overflow-hidden bg-zinc-950/50">
           <TownView
             completedQuests={gameState.completedQuests}
@@ -343,6 +375,7 @@ export function GamePage({ characterName, characterClass }: GamePageProps) {
               zoneName={zone.name}
               availableSkillPoints={gameState.availableSkillPoints}
               questsCompleted={gameState.completedQuests.length}
+              flasks={gameState.flasks}
             />
           </aside>
 
