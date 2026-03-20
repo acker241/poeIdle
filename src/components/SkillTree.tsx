@@ -51,70 +51,17 @@ interface NodeStyle {
   allocatedStroke: string;
 }
 
+// Screen-space pixel sizes for nodes
 const NODE_STYLES: Record<string, NodeStyle> = {
-  small: {
-    radius: 40,
-    fill: "#555555",
-    stroke: "#888888",
-    allocatedFill: "#b0a070",
-    allocatedStroke: "#e0d0a0",
-  },
-  notable: {
-    radius: 60,
-    fill: "#997a3d",
-    stroke: "#c9a84c",
-    allocatedFill: "#d4af37",
-    allocatedStroke: "#ffe066",
-  },
-  keystone: {
-    radius: 80,
-    fill: "#5c3d99",
-    stroke: "#8b6cc5",
-    allocatedFill: "#9b6ed8",
-    allocatedStroke: "#c9a8f0",
-  },
-  mastery: {
-    radius: 50,
-    fill: "#333333",
-    stroke: "#666666",
-    allocatedFill: "#888888",
-    allocatedStroke: "#bbbbbb",
-  },
-  jewel_socket: {
-    radius: 50,
-    fill: "#2d5a27",
-    stroke: "#4a8c41",
-    allocatedFill: "#4daa3d",
-    allocatedStroke: "#7ddf6a",
-  },
-  class_start: {
-    radius: 100,
-    fill: "#1a4a6e",
-    stroke: "#3498db",
-    allocatedFill: "#3498db",
-    allocatedStroke: "#6fc0f0",
-  },
-  ascendancy_small: {
-    radius: 40,
-    fill: "#6e1a1a",
-    stroke: "#993333",
-    allocatedFill: "#cc4444",
-    allocatedStroke: "#ff7777",
-  },
-  ascendancy_notable: {
-    radius: 60,
-    fill: "#8b1a1a",
-    stroke: "#cc3333",
-    allocatedFill: "#ee5555",
-    allocatedStroke: "#ff9999",
-  },
-  ascendancy_start: {
-    radius: 50,
-    fill: "#6e1a1a",
-    stroke: "#993333",
-    allocatedFill: "#cc4444",
-    allocatedStroke: "#ff7777",
-  },
+  small:              { radius: 4,  fill: "#555555", stroke: "#888888", allocatedFill: "#b0a070", allocatedStroke: "#e0d0a0" },
+  notable:            { radius: 7,  fill: "#997a3d", stroke: "#c9a84c", allocatedFill: "#d4af37", allocatedStroke: "#ffe066" },
+  keystone:           { radius: 10, fill: "#5c3d99", stroke: "#8b6cc5", allocatedFill: "#9b6ed8", allocatedStroke: "#c9a8f0" },
+  mastery:            { radius: 5,  fill: "#333333", stroke: "#666666", allocatedFill: "#888888", allocatedStroke: "#bbbbbb" },
+  jewel_socket:       { radius: 6,  fill: "#2d5a27", stroke: "#4a8c41", allocatedFill: "#4daa3d", allocatedStroke: "#7ddf6a" },
+  class_start:        { radius: 12, fill: "#1a4a6e", stroke: "#3498db", allocatedFill: "#3498db", allocatedStroke: "#6fc0f0" },
+  ascendancy_small:   { radius: 4,  fill: "#6e1a1a", stroke: "#993333", allocatedFill: "#cc4444", allocatedStroke: "#ff7777" },
+  ascendancy_notable: { radius: 7,  fill: "#8b1a1a", stroke: "#cc3333", allocatedFill: "#ee5555", allocatedStroke: "#ff9999" },
+  ascendancy_start:   { radius: 6,  fill: "#6e1a1a", stroke: "#993333", allocatedFill: "#cc4444", allocatedStroke: "#ff7777" },
 };
 
 const DEFAULT_STYLE: NodeStyle = NODE_STYLES.small;
@@ -127,20 +74,25 @@ function getNodeStyle(type: string): NodeStyle {
   return NODE_STYLES[type] ?? DEFAULT_STYLE;
 }
 
-/** Find a node under the given world-space coordinates. */
+/** Find a node under the given screen-space coordinates. */
 function hitTest(
-  worldX: number,
-  worldY: number,
+  screenX: number,
+  screenY: number,
   nodes: ProcessedNode[],
+  scale: number,
+  offsetX: number,
+  offsetY: number,
 ): ProcessedNode | null {
-  // Iterate in reverse so top-drawn nodes get priority
   for (let i = nodes.length - 1; i >= 0; i--) {
     const n = nodes[i];
     const style = getNodeStyle(n.type);
-    const dx = worldX - n.x;
-    const dy = worldY - n.y;
-    // Use a slightly larger hit radius for usability
-    const hitRadius = style.radius + 20;
+    // Convert node world pos to screen pos
+    const sx = n.x * scale + offsetX;
+    const sy = n.y * scale + offsetY;
+    const dx = screenX - sx;
+    const dy = screenY - sy;
+    // Hit test in screen-space pixels (radius + padding)
+    const hitRadius = style.radius + 4;
     if (dx * dx + dy * dy <= hitRadius * hitRadius) {
       return n;
     }
@@ -224,23 +176,26 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
     if (!treeData || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = canvas.width / dpr;
+    const cssH = canvas.height / dpr;
     const b = treeData.bounds;
 
     // Center on the whole tree
     const centerX = (b.minX + b.maxX) / 2;
     const centerY = (b.minY + b.maxY) / 2;
 
-    // Calculate scale to fit whole tree in view
+    // Calculate scale to fit whole tree in view (CSS pixels)
     const treeWidth = b.maxX - b.minX;
     const treeHeight = b.maxY - b.minY;
-    const scaleX = canvas.width / treeWidth;
-    const scaleY = canvas.height / treeHeight;
-    const fitScale = Math.min(scaleX, scaleY) * 0.8;
+    const scaleX = cssW / treeWidth;
+    const scaleY = cssH / treeHeight;
+    const fitScale = Math.min(scaleX, scaleY) * 0.85;
 
     scaleRef.current = fitScale;
     offsetRef.current = {
-      x: canvas.width / 2 - centerX * fitScale,
-      y: canvas.height / 2 - centerY * fitScale,
+      x: cssW / 2 - centerX * fitScale,
+      y: cssH / 2 - centerY * fitScale,
     };
 
     needsRenderRef.current = true;
@@ -258,24 +213,24 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const w = canvas.width;
-    const h = canvas.height;
+    const dpr = window.devicePixelRatio || 1;
+    // CSS pixel dimensions
+    const w = canvas.width / dpr;
+    const h = canvas.height / dpr;
     const scale = scaleRef.current;
     const ox = offsetRef.current.x;
     const oy = offsetRef.current.y;
     const allocated = allocatedRef.current;
     const hovId = hoveredIdRef.current;
 
-    // Clear
+    // Clear (full canvas buffer)
+    ctx.save();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // reset to DPR-scaled identity
     ctx.fillStyle = BG_COLOR;
     ctx.fillRect(0, 0, w, h);
 
-    ctx.save();
-    ctx.translate(ox, oy);
-    ctx.scale(scale, scale);
-
     // Determine visible bounds in world space (with padding)
-    const pad = 200; // world-space padding
+    const pad = 500 / scale;
     const visMinX = -ox / scale - pad;
     const visMinY = -oy / scale - pad;
     const visMaxX = (w - ox) / scale + pad;
@@ -291,19 +246,17 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
 
     const visibleIds = new Set(visibleNodes.map((n) => n.id));
 
-    // --- Draw connections ---
-    // Unallocated connections first
-    ctx.lineWidth = 6;
-
+    // --- Draw connections in world space ---
+    ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * ox, dpr * oy);
+    const connWidth = Math.max(1, 2 / scale); // thin lines in world space
+    ctx.lineWidth = connWidth;
     ctx.strokeStyle = CONNECTION_COLOR;
     ctx.beginPath();
     for (const node of visibleNodes) {
       for (const connId of node.connections) {
-        // Only draw each edge once: draw if this node's id < connId
         if (node.id > connId) continue;
         const target = nodeMapRef.current.get(connId);
         if (!target) continue;
-        // Skip if both are allocated (drawn later in gold)
         if (allocated.has(node.id) && allocated.has(connId)) continue;
         ctx.moveTo(node.x, node.y);
         ctx.lineTo(target.x, target.y);
@@ -314,7 +267,7 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
     // Allocated connections (gold)
     if (allocated.size > 0) {
       ctx.strokeStyle = ALLOCATED_CONNECTION_COLOR;
-      ctx.lineWidth = 10;
+      ctx.lineWidth = Math.max(1.5, 3 / scale);
       ctx.beginPath();
       for (const node of visibleNodes) {
         if (!allocated.has(node.id)) continue;
@@ -328,65 +281,64 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
         }
       }
       ctx.stroke();
+
+      // Off-screen allocated connections
+      ctx.beginPath();
+      for (const node of visibleNodes) {
+        if (!allocated.has(node.id)) continue;
+        for (const connId of node.connections) {
+          if (visibleIds.has(connId)) continue;
+          if (!allocated.has(connId)) continue;
+          const target = nodeMapRef.current.get(connId);
+          if (!target) continue;
+          if (node.id > connId) continue;
+          ctx.moveTo(node.x, node.y);
+          ctx.lineTo(target.x, target.y);
+        }
+      }
+      ctx.stroke();
     }
 
-    // --- Draw nodes ---
-    // Batch by type to minimize state changes
+    // --- Draw nodes in SCREEN SPACE (fixed pixel sizes) ---
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     for (const node of visibleNodes) {
       const style = getNodeStyle(node.type);
       const isAlloc = allocated.has(node.id);
       const isHovered = node.id === hovId;
 
+      // World -> screen
+      const sx = node.x * scale + ox;
+      const sy = node.y * scale + oy;
+
       const fill = isAlloc ? style.allocatedFill : style.fill;
       const stroke = isAlloc ? style.allocatedStroke : style.stroke;
       let r = style.radius;
-
-      if (isHovered) {
-        r *= 1.25;
-      }
+      if (isHovered) r *= 1.4;
 
       ctx.beginPath();
-      ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
+      ctx.arc(sx, sy, r, 0, Math.PI * 2);
       ctx.fillStyle = fill;
       ctx.fill();
-      ctx.lineWidth = isHovered ? 3 : 2;
+      ctx.lineWidth = isHovered ? 2 : 1;
       ctx.strokeStyle = isHovered ? "#ffffff" : stroke;
       ctx.stroke();
     }
 
-    // --- Draw node labels for notable/keystone when zoomed in ---
-    if (scale > 0.08) {
-      ctx.font = "24px sans-serif";
+    // --- Node labels when zoomed in ---
+    const showLabels = scale > 0.04;
+    if (showLabels) {
+      const fontSize = Math.min(12, Math.max(8, scale * 200));
+      ctx.font = `${fontSize}px sans-serif`;
       ctx.fillStyle = "#ccc";
       ctx.textAlign = "center";
       for (const node of visibleNodes) {
         if (node.type === "notable" || node.type === "keystone") {
+          const sx = node.x * scale + ox;
+          const sy = node.y * scale + oy;
           const style = getNodeStyle(node.type);
-          ctx.fillText(node.name, node.x, node.y + style.radius + 30);
+          ctx.fillText(node.name, sx, sy + style.radius + fontSize + 2);
         }
       }
-    }
-
-    // Draw connections to off-screen allocated neighbors (so gold edges don't disappear)
-    // This is handled by the padding above, but add allocated nodes that are off-screen
-    // but connected to on-screen allocated nodes
-    if (allocated.size > 0) {
-      ctx.strokeStyle = ALLOCATED_CONNECTION_COLOR;
-      ctx.lineWidth = 10;
-      ctx.beginPath();
-      for (const node of visibleNodes) {
-        if (!allocated.has(node.id)) continue;
-        for (const connId of node.connections) {
-          if (visibleIds.has(connId)) continue; // already drawn
-          if (!allocated.has(connId)) continue;
-          const target = nodeMapRef.current.get(connId);
-          if (!target) continue;
-          if (node.id > connId) continue;
-          ctx.moveTo(node.x, node.y);
-          ctx.lineTo(target.x, target.y);
-        }
-      }
-      ctx.stroke();
     }
 
     ctx.restore();
@@ -424,8 +376,11 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
 
     const resize = () => {
       const rect = container.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
       needsRenderRef.current = true;
     };
 
@@ -490,8 +445,7 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
           const rect = canvas.getBoundingClientRect();
           const cx = ev.clientX - rect.left;
           const cy = ev.clientY - rect.top;
-          const world = screenToWorld(cx, cy);
-          const node = hitTest(world.x, world.y, treeData.nodes);
+          const node = hitTest(cx, cy, treeData.nodes, scaleRef.current, offsetRef.current.x, offsetRef.current.y);
           if (node && node.type !== "mastery") {
             setAllocatedNodes((prev) => {
               const next = new Set(prev);
@@ -512,15 +466,14 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
       window.addEventListener("mousemove", onMove);
       window.addEventListener("mouseup", onUp);
     },
-    [treeData, screenToWorld, onAllocate],
+    [treeData, onAllocate],
   );
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
       if (!treeData) return;
       const coords = getCanvasCoords(e);
-      const world = screenToWorld(coords.x, coords.y);
-      const node = hitTest(world.x, world.y, treeData.nodes);
+      const node = hitTest(coords.x, coords.y, treeData.nodes, scaleRef.current, offsetRef.current.x, offsetRef.current.y);
 
       const prevId = hoveredIdRef.current;
       const newId = node?.id ?? null;
@@ -535,7 +488,7 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
         setTooltipPos({ x: e.clientX, y: e.clientY });
       }
     },
-    [treeData, getCanvasCoords, screenToWorld],
+    [treeData, getCanvasCoords],
   );
 
   // Wheel handler stored as ref so the native event listener always sees the latest
