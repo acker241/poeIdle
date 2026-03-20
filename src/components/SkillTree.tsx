@@ -80,8 +80,8 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
   const oyRef = useRef(0);
   const scaleRef = useRef(0.05);
   const fitScaleRef = useRef(0.05);
-  const needsRender = useRef(true);
   const rafRef = useRef(0);
+  const centeredRef = useRef(false);
 
   // Interaction
   const [allocated, setAllocated] = useState<Set<string>>(new Set());
@@ -111,24 +111,7 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
     return () => { cancelled = true; };
   }, []);
 
-  // -----------------------------------------------------------------------
-  // Center & fit on load
-  // -----------------------------------------------------------------------
-  useEffect(() => {
-    if (!treeData || !containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const b = treeData.bounds;
-    const tw = b.maxX - b.minX;
-    const th = b.maxY - b.minY;
-    const cx = (b.minX + b.maxX) / 2;
-    const cy = (b.minY + b.maxY) / 2;
-    const fit = Math.min(rect.width / tw, rect.height / th) * 0.9;
-    fitScaleRef.current = fit;
-    scaleRef.current = fit;
-    oxRef.current = rect.width / 2 - cx * fit;
-    oyRef.current = rect.height / 2 - cy * fit;
-    needsRender.current = true;
-  }, [treeData]);
+  // Centering is done inside render() on first frame with valid dimensions
 
   // -----------------------------------------------------------------------
   // Render loop
@@ -143,7 +126,27 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
     const dpr = window.devicePixelRatio || 1;
     const w = canvas.width / dpr;
     const h = canvas.height / dpr;
+    if (w < 10 || h < 10) return; // canvas not sized yet
+
+    // Center on first valid frame
+    if (!centeredRef.current) {
+      const b = data.bounds;
+      const tw = b.maxX - b.minX;
+      const th = b.maxY - b.minY;
+      if (tw > 0 && th > 0) {
+        const cx = (b.minX + b.maxX) / 2;
+        const cy = (b.minY + b.maxY) / 2;
+        const fit = Math.min(w / tw, h / th) * 0.9;
+        fitScaleRef.current = fit;
+        scaleRef.current = fit;
+        oxRef.current = w / 2 - cx * fit;
+        oyRef.current = h / 2 - cy * fit;
+        centeredRef.current = true;
+      }
+    }
+
     const s = scaleRef.current;
+    if (s <= 0) return;
     const ox = oxRef.current;
     const oy = oyRef.current;
     const alloc = allocRef.current;
@@ -247,17 +250,15 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
     }
   }, [treeData]);
 
-  // RAF loop
+  // RAF loop — always renders (3337 nodes is fast enough)
   useEffect(() => {
     const loop = () => {
-      if (needsRender.current) { render(); needsRender.current = false; }
+      render();
       rafRef.current = requestAnimationFrame(loop);
     };
     rafRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(rafRef.current);
   }, [render]);
-
-  useEffect(() => { needsRender.current = true; }, [allocated]);
 
   // -----------------------------------------------------------------------
   // Resize
@@ -273,7 +274,7 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
       cv.height = r.height * dpr;
       cv.style.width = `${r.width}px`;
       cv.style.height = `${r.height}px`;
-      needsRender.current = true;
+      /* render runs every frame */
     });
     obs.observe(c);
     // Initial size
@@ -320,7 +321,7 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
       oxRef.current += dx;
       oyRef.current += dy;
       lastMouse.current = { x: ev.clientX, y: ev.clientY };
-      needsRender.current = true;
+      /* render runs every frame */
     };
 
     const onUp = (ev: MouseEvent) => {
@@ -356,7 +357,7 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
     if (node?.id !== hovIdRef.current) {
       hovIdRef.current = node?.id ?? null;
       setHovered(node);
-      needsRender.current = true;
+      /* render runs every frame */
     }
     if (node) setTooltipPos({ x: e.clientX, y: e.clientY });
   }, [findNode]);
@@ -377,14 +378,14 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
       oxRef.current = mx - (mx - oxRef.current) * ratio;
       oyRef.current = my - (my - oyRef.current) * ratio;
       scaleRef.current = next;
-      needsRender.current = true;
+      /* render runs every frame */
     };
     cv.addEventListener("wheel", handler, { passive: false });
     return () => cv.removeEventListener("wheel", handler);
   }, [treeData]); // re-attach when tree loads
 
   const onLeave = useCallback(() => {
-    if (hovIdRef.current) { hovIdRef.current = null; setHovered(null); needsRender.current = true; }
+    if (hovIdRef.current) { hovIdRef.current = null; setHovered(null); }
   }, []);
 
   // -----------------------------------------------------------------------
