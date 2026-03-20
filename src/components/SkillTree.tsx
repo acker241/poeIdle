@@ -14,19 +14,8 @@ interface ProcessedTree {
     startNodeId: string | null;
     ascendancies: Array<{ id: string; name: string }>;
   }>;
-  groups: Array<{
-    id: string;
-    x: number;
-    y: number;
-    orbits: number[];
-    nodeIds: string[];
-  }>;
-  constants: {
-    skillsPerOrbit: number[];
-    orbitRadii: number[];
-    totalPoints: number;
-    ascendancyPoints: number;
-  };
+  groups: Array<{ id: string; x: number; y: number; orbits: number[]; nodeIds: string[] }>;
+  constants: { skillsPerOrbit: number[]; orbitRadii: number[]; totalPoints: number; ascendancyPoints: number };
   bounds: { minX: number; minY: number; maxX: number; maxY: number };
 }
 
@@ -36,75 +25,42 @@ interface SkillTreeProps {
 }
 
 // ---------------------------------------------------------------------------
-// Visual constants
+// Constants
 // ---------------------------------------------------------------------------
 
-const BG_COLOR = "#0c0c0e";
-const CONNECTION_COLOR = "#333333";
-const ALLOCATED_CONNECTION_COLOR = "#c9a84c";
+const BG = "#0c0c0e";
+const CONN_COLOR = "#444";
+const CONN_ALLOC_COLOR = "#c9a84c";
 
-interface NodeStyle {
-  radius: number;
-  fill: string;
-  stroke: string;
-  allocatedFill: string;
-  allocatedStroke: string;
-}
-
-// Base screen-space pixel sizes — scaled dynamically by zoom level
-const NODE_STYLES: Record<string, NodeStyle> = {
-  small:              { radius: 3,  fill: "#555555", stroke: "#888888", allocatedFill: "#b0a070", allocatedStroke: "#e0d0a0" },
-  notable:            { radius: 5,  fill: "#997a3d", stroke: "#c9a84c", allocatedFill: "#d4af37", allocatedStroke: "#ffe066" },
-  keystone:           { radius: 7,  fill: "#5c3d99", stroke: "#8b6cc5", allocatedFill: "#9b6ed8", allocatedStroke: "#c9a8f0" },
-  mastery:            { radius: 3,  fill: "#333333", stroke: "#666666", allocatedFill: "#888888", allocatedStroke: "#bbbbbb" },
-  jewel_socket:       { radius: 4,  fill: "#2d5a27", stroke: "#4a8c41", allocatedFill: "#4daa3d", allocatedStroke: "#7ddf6a" },
-  class_start:        { radius: 8,  fill: "#1a4a6e", stroke: "#3498db", allocatedFill: "#3498db", allocatedStroke: "#6fc0f0" },
-  ascendancy_small:   { radius: 3,  fill: "#6e1a1a", stroke: "#993333", allocatedFill: "#cc4444", allocatedStroke: "#ff7777" },
-  ascendancy_notable: { radius: 5,  fill: "#8b1a1a", stroke: "#cc3333", allocatedFill: "#ee5555", allocatedStroke: "#ff9999" },
-  ascendancy_start:   { radius: 4,  fill: "#6e1a1a", stroke: "#993333", allocatedFill: "#cc4444", allocatedStroke: "#ff7777" },
+// Screen-pixel radii per node type
+const RADII: Record<string, number> = {
+  small: 3, notable: 5, keystone: 7, mastery: 3, jewel_socket: 4,
+  class_start: 8, ascendancy_small: 3, ascendancy_notable: 5, ascendancy_start: 4,
 };
-
-/** Compute zoom-dependent multiplier for node sizes.
- *  At fitScale (~0.03) nodes are tiny dots, at high zoom they're full size. */
-function getNodeScale(zoom: number): number {
-  // Ranges from 0.4 (overview) to 2.5 (zoomed in)
-  const t = Math.min(1, Math.max(0, (zoom - 0.01) / 0.15));
-  return 0.4 + t * 2.1;
-}
-
-const DEFAULT_STYLE: NodeStyle = NODE_STYLES.small;
+const FILLS: Record<string, string> = {
+  small: "#666", notable: "#b8942e", keystone: "#7b50c4", mastery: "#444",
+  jewel_socket: "#3a7a33", class_start: "#2980b9", ascendancy_small: "#992222",
+  ascendancy_notable: "#bb2222", ascendancy_start: "#992222",
+};
+const ALLOC_FILLS: Record<string, string> = {
+  small: "#c8b868", notable: "#e8c838", keystone: "#a878e8", mastery: "#999",
+  jewel_socket: "#5cbf50", class_start: "#4db8e8", ascendancy_small: "#dd5555",
+  ascendancy_notable: "#ee5555", ascendancy_start: "#dd5555",
+};
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-function getNodeStyle(type: string): NodeStyle {
-  return NODE_STYLES[type] ?? DEFAULT_STYLE;
+function w2s(wx: number, wy: number, s: number, ox: number, oy: number) {
+  return [wx * s + ox, wy * s + oy] as const;
 }
 
-/** Find a node under the given screen-space coordinates. */
-function hitTest(
-  screenX: number,
-  screenY: number,
-  nodes: ProcessedNode[],
-  scale: number,
-  offsetX: number,
-  offsetY: number,
-): ProcessedNode | null {
-  const ns = getNodeScale(scale);
-  for (let i = nodes.length - 1; i >= 0; i--) {
-    const n = nodes[i];
-    const style = getNodeStyle(n.type);
-    const sx = n.x * scale + offsetX;
-    const sy = n.y * scale + offsetY;
-    const dx = screenX - sx;
-    const dy = screenY - sy;
-    const hitRadius = style.radius * ns + 3;
-    if (dx * dx + dy * dy <= hitRadius * hitRadius) {
-      return n;
-    }
-  }
-  return null;
+/** Zoom-dependent radius multiplier: 0.5x at overview → 3x zoomed in */
+function nodeMul(scale: number, fitScale: number): number {
+  const ratio = scale / fitScale;
+  // ratio 1 = overview, higher = zoomed in
+  return Math.min(3, Math.max(0.5, 0.5 + (ratio - 1) * 0.3));
 }
 
 // ---------------------------------------------------------------------------
@@ -115,473 +71,350 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Data
   const [treeData, setTreeData] = useState<ProcessedTree | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  // Lookup map for quick id -> node
   const nodeMapRef = useRef<Map<string, ProcessedNode>>(new Map());
 
-  // Interaction state stored in refs to avoid re-renders during pan/zoom
-  const offsetRef = useRef({ x: 0, y: 0 });
-  const scaleRef = useRef(0.15);
-  const isDraggingRef = useRef(false);
-  const lastMouseRef = useRef({ x: 0, y: 0 });
+  // View state (mutable for perf)
+  const oxRef = useRef(0);
+  const oyRef = useRef(0);
+  const scaleRef = useRef(0.05);
+  const fitScaleRef = useRef(0.05);
+  const needsRender = useRef(true);
+  const rafRef = useRef(0);
 
-  // State that triggers React re-renders
-  const [allocatedNodes, setAllocatedNodes] = useState<Set<string>>(new Set());
-  const [hoveredNode, setHoveredNode] = useState<ProcessedNode | null>(null);
+  // Interaction
+  const [allocated, setAllocated] = useState<Set<string>>(new Set());
+  const allocRef = useRef<Set<string>>(new Set());
+  allocRef.current = allocated;
+  const [hovered, setHovered] = useState<ProcessedNode | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
-
-  // Track whether a render is needed
-  const needsRenderRef = useRef(true);
-  const rafIdRef = useRef<number>(0);
-
-  // Store latest allocated set in ref so canvas render loop can access it
-  const allocatedRef = useRef<Set<string>>(allocatedNodes);
-  allocatedRef.current = allocatedNodes;
-
-  // Store hovered node id in ref for the render loop
-  const hoveredIdRef = useRef<string | null>(null);
+  const hovIdRef = useRef<string | null>(null);
+  const dragRef = useRef(false);
+  const lastMouse = useRef({ x: 0, y: 0 });
 
   // -----------------------------------------------------------------------
-  // Data fetching
+  // Load data
   // -----------------------------------------------------------------------
-
   useEffect(() => {
     let cancelled = false;
     fetch("/data/processed/skill-tree.json")
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
       .then((data: ProcessedTree) => {
         if (cancelled) return;
-
-        // Build lookup map
         const map = new Map<string, ProcessedNode>();
-        for (const n of data.nodes) {
-          map.set(n.id, n);
-        }
+        for (const n of data.nodes) map.set(n.id, n);
         nodeMapRef.current = map;
-
         setTreeData(data);
       })
-      .catch((err) => {
-        if (!cancelled) setError(String(err));
-      });
-    return () => {
-      cancelled = true;
-    };
+      .catch(e => { if (!cancelled) setError(String(e)); });
+    return () => { cancelled = true; };
   }, []);
 
   // -----------------------------------------------------------------------
-  // Centering on load
+  // Center & fit on load
   // -----------------------------------------------------------------------
-
   useEffect(() => {
-    if (!treeData || !canvasRef.current) return;
-
-    const canvas = canvasRef.current;
-    const dpr = window.devicePixelRatio || 1;
-    const cssW = canvas.width / dpr;
-    const cssH = canvas.height / dpr;
+    if (!treeData || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
     const b = treeData.bounds;
-
-    // Center on the whole tree
-    const centerX = (b.minX + b.maxX) / 2;
-    const centerY = (b.minY + b.maxY) / 2;
-
-    // Calculate scale to fit whole tree in view (CSS pixels)
-    const treeWidth = b.maxX - b.minX;
-    const treeHeight = b.maxY - b.minY;
-    const scaleX = cssW / treeWidth;
-    const scaleY = cssH / treeHeight;
-    const fitScale = Math.min(scaleX, scaleY) * 0.85;
-
-    scaleRef.current = fitScale;
-    offsetRef.current = {
-      x: cssW / 2 - centerX * fitScale,
-      y: cssH / 2 - centerY * fitScale,
-    };
-
-    needsRenderRef.current = true;
-  }, [treeData, characterClass]);
+    const tw = b.maxX - b.minX;
+    const th = b.maxY - b.minY;
+    const cx = (b.minX + b.maxX) / 2;
+    const cy = (b.minY + b.maxY) / 2;
+    const fit = Math.min(rect.width / tw, rect.height / th) * 0.9;
+    fitScaleRef.current = fit;
+    scaleRef.current = fit;
+    oxRef.current = rect.width / 2 - cx * fit;
+    oyRef.current = rect.height / 2 - cy * fit;
+    needsRender.current = true;
+  }, [treeData]);
 
   // -----------------------------------------------------------------------
-  // Canvas render
+  // Render loop
   // -----------------------------------------------------------------------
-
-  const renderCanvas = useCallback(() => {
+  const render = useCallback(() => {
     const canvas = canvasRef.current;
     const data = treeData;
     if (!canvas || !data) return;
-
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const dpr = window.devicePixelRatio || 1;
-    // CSS pixel dimensions
     const w = canvas.width / dpr;
     const h = canvas.height / dpr;
-    const scale = scaleRef.current;
-    const ox = offsetRef.current.x;
-    const oy = offsetRef.current.y;
-    const allocated = allocatedRef.current;
-    const hovId = hoveredIdRef.current;
+    const s = scaleRef.current;
+    const ox = oxRef.current;
+    const oy = oyRef.current;
+    const alloc = allocRef.current;
+    const hovId = hovIdRef.current;
+    const mul = nodeMul(s, fitScaleRef.current);
 
-    // Clear (full canvas buffer)
-    ctx.save();
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // reset to DPR-scaled identity
-    ctx.fillStyle = BG_COLOR;
+    // Reset transform and clear
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = BG;
     ctx.fillRect(0, 0, w, h);
 
-    // Determine visible bounds in world space (with padding)
-    const pad = 500 / scale;
-    const visMinX = -ox / scale - pad;
-    const visMinY = -oy / scale - pad;
-    const visMaxX = (w - ox) / scale + pad;
-    const visMaxY = (h - oy) / scale + pad;
+    // Visible bounds (CSS pixel coords → world)
+    const margin = 50;
+    const wMinX = (-ox - margin) / s;
+    const wMinY = (-oy - margin) / s;
+    const wMaxX = (w - ox + margin) / s;
+    const wMaxY = (h - oy + margin) / s;
 
-    // Pre-filter visible nodes
-    const visibleNodes: ProcessedNode[] = [];
+    // Filter visible nodes
+    const vis: ProcessedNode[] = [];
     for (const n of data.nodes) {
-      if (n.x >= visMinX && n.x <= visMaxX && n.y >= visMinY && n.y <= visMaxY) {
-        visibleNodes.push(n);
-      }
+      if (n.x >= wMinX && n.x <= wMaxX && n.y >= wMinY && n.y <= wMaxY) vis.push(n);
     }
+    const visSet = new Set(vis.map(n => n.id));
 
-    const visibleIds = new Set(visibleNodes.map((n) => n.id));
+    // --- Connections ---
+    ctx.lineWidth = Math.max(0.5, mul * 0.4);
 
-    // --- Draw connections in world space ---
-    ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * ox, dpr * oy);
-    const connWidth = Math.max(1, 2 / scale); // thin lines in world space
-    ctx.lineWidth = connWidth;
-    ctx.strokeStyle = CONNECTION_COLOR;
+    // Unallocated
+    ctx.strokeStyle = CONN_COLOR;
     ctx.beginPath();
-    for (const node of visibleNodes) {
-      for (const connId of node.connections) {
-        if (node.id > connId) continue;
-        const target = nodeMapRef.current.get(connId);
-        if (!target) continue;
-        if (allocated.has(node.id) && allocated.has(connId)) continue;
-        ctx.moveTo(node.x, node.y);
-        ctx.lineTo(target.x, target.y);
+    for (const n of vis) {
+      const [x1, y1] = w2s(n.x, n.y, s, ox, oy);
+      for (const cid of n.connections) {
+        if (n.id > cid) continue;
+        const t = nodeMapRef.current.get(cid);
+        if (!t) continue;
+        if (alloc.has(n.id) && alloc.has(cid)) continue;
+        const [x2, y2] = w2s(t.x, t.y, s, ox, oy);
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
       }
     }
     ctx.stroke();
 
     // Allocated connections (gold)
-    if (allocated.size > 0) {
-      ctx.strokeStyle = ALLOCATED_CONNECTION_COLOR;
-      ctx.lineWidth = Math.max(1.5, 3 / scale);
+    if (alloc.size > 0) {
+      ctx.strokeStyle = CONN_ALLOC_COLOR;
+      ctx.lineWidth = Math.max(1, mul * 0.8);
       ctx.beginPath();
-      for (const node of visibleNodes) {
-        if (!allocated.has(node.id)) continue;
-        for (const connId of node.connections) {
-          if (node.id > connId) continue;
-          if (!allocated.has(connId)) continue;
-          const target = nodeMapRef.current.get(connId);
-          if (!target) continue;
-          ctx.moveTo(node.x, node.y);
-          ctx.lineTo(target.x, target.y);
-        }
-      }
-      ctx.stroke();
-
-      // Off-screen allocated connections
-      ctx.beginPath();
-      for (const node of visibleNodes) {
-        if (!allocated.has(node.id)) continue;
-        for (const connId of node.connections) {
-          if (visibleIds.has(connId)) continue;
-          if (!allocated.has(connId)) continue;
-          const target = nodeMapRef.current.get(connId);
-          if (!target) continue;
-          if (node.id > connId) continue;
-          ctx.moveTo(node.x, node.y);
-          ctx.lineTo(target.x, target.y);
+      for (const n of vis) {
+        if (!alloc.has(n.id)) continue;
+        const [x1, y1] = w2s(n.x, n.y, s, ox, oy);
+        for (const cid of n.connections) {
+          if (n.id > cid) continue;
+          if (!alloc.has(cid)) continue;
+          const t = nodeMapRef.current.get(cid);
+          if (!t) continue;
+          const [x2, y2] = w2s(t.x, t.y, s, ox, oy);
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
         }
       }
       ctx.stroke();
     }
 
-    // --- Draw nodes in SCREEN SPACE (zoom-dependent sizes) ---
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const ns = getNodeScale(scale);
-
-    for (const node of visibleNodes) {
-      const style = getNodeStyle(node.type);
-      const isAlloc = allocated.has(node.id);
-      const isHovered = node.id === hovId;
-
-      const sx = node.x * scale + ox;
-      const sy = node.y * scale + oy;
-
-      const fill = isAlloc ? style.allocatedFill : style.fill;
-      const stroke = isAlloc ? style.allocatedStroke : style.stroke;
-      let r = style.radius * ns;
-      if (isHovered) r *= 1.3;
+    // --- Nodes ---
+    for (const n of vis) {
+      const [sx, sy] = w2s(n.x, n.y, s, ox, oy);
+      const isA = alloc.has(n.id);
+      const isH = n.id === hovId;
+      const baseR = RADII[n.type] ?? 3;
+      let r = baseR * mul;
+      if (isH) r *= 1.4;
+      r = Math.max(0.8, r);
 
       ctx.beginPath();
-      ctx.arc(sx, sy, Math.max(0.5, r), 0, Math.PI * 2);
-      ctx.fillStyle = fill;
+      ctx.arc(sx, sy, r, 0, Math.PI * 2);
+      ctx.fillStyle = isA ? (ALLOC_FILLS[n.type] ?? "#c8b868") : (FILLS[n.type] ?? "#666");
       ctx.fill();
 
-      // Only draw stroke when nodes are big enough
-      if (r > 1.5) {
-        ctx.lineWidth = isHovered ? 2 : 1;
-        ctx.strokeStyle = isHovered ? "#ffffff" : stroke;
+      if (r > 2) {
+        ctx.lineWidth = isH ? 1.5 : 0.5;
+        ctx.strokeStyle = isH ? "#fff" : "rgba(255,255,255,0.2)";
         ctx.stroke();
       }
     }
 
-    // --- Node labels when zoomed in enough ---
-    if (ns > 1.5) {
-      const fontSize = Math.min(12, Math.max(7, ns * 4));
-      ctx.font = `${fontSize}px sans-serif`;
-      ctx.fillStyle = "#ccc";
+    // --- Labels (zoomed in) ---
+    if (mul > 1.2) {
+      const fs = Math.min(11, Math.max(7, mul * 3.5));
+      ctx.font = `${fs}px sans-serif`;
+      ctx.fillStyle = "#bbb";
       ctx.textAlign = "center";
-      for (const node of visibleNodes) {
-        if (node.type === "notable" || node.type === "keystone") {
-          const sx = node.x * scale + ox;
-          const sy = node.y * scale + oy;
-          const r = getNodeStyle(node.type).radius * ns;
-          ctx.fillText(node.name, sx, sy + r + fontSize + 1);
-        }
+      for (const n of vis) {
+        if (n.type !== "notable" && n.type !== "keystone") continue;
+        const [sx, sy] = w2s(n.x, n.y, s, ox, oy);
+        const r = (RADII[n.type] ?? 5) * mul;
+        ctx.fillText(n.name, sx, sy + r + fs + 1);
       }
     }
-
-    ctx.restore();
   }, [treeData]);
 
-  // -----------------------------------------------------------------------
-  // Animation loop
-  // -----------------------------------------------------------------------
-
+  // RAF loop
   useEffect(() => {
     const loop = () => {
-      if (needsRenderRef.current) {
-        renderCanvas();
-        needsRenderRef.current = false;
-      }
-      rafIdRef.current = requestAnimationFrame(loop);
+      if (needsRender.current) { render(); needsRender.current = false; }
+      rafRef.current = requestAnimationFrame(loop);
     };
-    rafIdRef.current = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(rafIdRef.current);
-  }, [renderCanvas]);
+    rafRef.current = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [render]);
 
-  // Request render when allocations change
-  useEffect(() => {
-    needsRenderRef.current = true;
-  }, [allocatedNodes]);
+  useEffect(() => { needsRender.current = true; }, [allocated]);
 
   // -----------------------------------------------------------------------
-  // Resize handling
+  // Resize
   // -----------------------------------------------------------------------
-
   useEffect(() => {
-    const container = containerRef.current;
-    const canvas = canvasRef.current;
-    if (!container || !canvas) return;
-
-    const resize = () => {
-      const rect = container.getBoundingClientRect();
+    const c = containerRef.current;
+    const cv = canvasRef.current;
+    if (!c || !cv) return;
+    const obs = new ResizeObserver(() => {
+      const r = c.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
-      needsRenderRef.current = true;
-    };
-
-    const observer = new ResizeObserver(resize);
-    observer.observe(container);
-    resize();
-
-    return () => observer.disconnect();
+      cv.width = r.width * dpr;
+      cv.height = r.height * dpr;
+      cv.style.width = `${r.width}px`;
+      cv.style.height = `${r.height}px`;
+      needsRender.current = true;
+    });
+    obs.observe(c);
+    // Initial size
+    const r = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    cv.width = r.width * dpr;
+    cv.height = r.height * dpr;
+    cv.style.width = `${r.width}px`;
+    cv.style.height = `${r.height}px`;
+    return () => obs.disconnect();
   }, []);
 
   // -----------------------------------------------------------------------
-  // Mouse event helpers
+  // Hit test (screen space)
   // -----------------------------------------------------------------------
-
-  const screenToWorld = useCallback((screenX: number, screenY: number) => {
-    const scale = scaleRef.current;
-    const ox = offsetRef.current.x;
-    const oy = offsetRef.current.y;
-    return {
-      x: (screenX - ox) / scale,
-      y: (screenY - oy) / scale,
-    };
-  }, []);
-
-  const getCanvasCoords = useCallback((e: React.MouseEvent) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return { x: 0, y: 0 };
-    const rect = canvas.getBoundingClientRect();
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-  }, []);
-
-  // -----------------------------------------------------------------------
-  // Event handlers
-  // -----------------------------------------------------------------------
-
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.button !== 0) return;
-      isDraggingRef.current = false;
-      lastMouseRef.current = { x: e.clientX, y: e.clientY };
-
-      const onMove = (ev: MouseEvent) => {
-        const dx = ev.clientX - lastMouseRef.current.x;
-        const dy = ev.clientY - lastMouseRef.current.y;
-        if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
-          isDraggingRef.current = true;
-        }
-        offsetRef.current.x += dx;
-        offsetRef.current.y += dy;
-        lastMouseRef.current = { x: ev.clientX, y: ev.clientY };
-        needsRenderRef.current = true;
-      };
-
-      const onUp = (ev: MouseEvent) => {
-        window.removeEventListener("mousemove", onMove);
-        window.removeEventListener("mouseup", onUp);
-
-        // If it was a click (not a drag), handle node allocation
-        if (!isDraggingRef.current && treeData) {
-          const canvas = canvasRef.current;
-          if (!canvas) return;
-          const rect = canvas.getBoundingClientRect();
-          const cx = ev.clientX - rect.left;
-          const cy = ev.clientY - rect.top;
-          const node = hitTest(cx, cy, treeData.nodes, scaleRef.current, offsetRef.current.x, offsetRef.current.y);
-          if (node && node.type !== "mastery") {
-            setAllocatedNodes((prev) => {
-              const next = new Set(prev);
-              if (next.has(node.id)) {
-                next.delete(node.id);
-              } else {
-                next.add(node.id);
-              }
-              if (onAllocate) {
-                onAllocate(Array.from(next));
-              }
-              return next;
-            });
-          }
-        }
-      };
-
-      window.addEventListener("mousemove", onMove);
-      window.addEventListener("mouseup", onUp);
-    },
-    [treeData, onAllocate],
-  );
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (!treeData) return;
-      const coords = getCanvasCoords(e);
-      const node = hitTest(coords.x, coords.y, treeData.nodes, scaleRef.current, offsetRef.current.x, offsetRef.current.y);
-
-      const prevId = hoveredIdRef.current;
-      const newId = node?.id ?? null;
-
-      if (prevId !== newId) {
-        hoveredIdRef.current = newId;
-        setHoveredNode(node);
-        needsRenderRef.current = true;
-      }
-
-      if (node) {
-        setTooltipPos({ x: e.clientX, y: e.clientY });
-      }
-    },
-    [treeData, getCanvasCoords],
-  );
-
-  // Wheel handler stored as ref so the native event listener always sees the latest
-  const handleWheelRef = useRef((e: WheelEvent) => {
-    e.preventDefault();
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-
-    const oldScale = scaleRef.current;
-    const zoomFactor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
-    let newScale = oldScale * zoomFactor;
-    newScale = Math.max(0.01, Math.min(2.0, newScale));
-
-    // Zoom toward the mouse cursor
-    const ratio = newScale / oldScale;
-    offsetRef.current.x = mouseX - (mouseX - offsetRef.current.x) * ratio;
-    offsetRef.current.y = mouseY - (mouseY - offsetRef.current.y) * ratio;
-    scaleRef.current = newScale;
-
-    needsRenderRef.current = true;
-  });
-
-  // Attach wheel listener with { passive: false } so preventDefault() works in Chrome
-  // Re-run when treeData loads to ensure canvas is mounted
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const handler = (e: WheelEvent) => handleWheelRef.current(e);
-    canvas.addEventListener("wheel", handler, { passive: false });
-    return () => canvas.removeEventListener("wheel", handler);
+  const findNode = useCallback((cx: number, cy: number): ProcessedNode | null => {
+    if (!treeData) return null;
+    const s = scaleRef.current;
+    const ox = oxRef.current;
+    const oy = oyRef.current;
+    const mul = nodeMul(s, fitScaleRef.current);
+    for (let i = treeData.nodes.length - 1; i >= 0; i--) {
+      const n = treeData.nodes[i];
+      const [sx, sy] = w2s(n.x, n.y, s, ox, oy);
+      const r = (RADII[n.type] ?? 3) * mul + 3;
+      const dx = cx - sx, dy = cy - sy;
+      if (dx * dx + dy * dy <= r * r) return n;
+    }
+    return null;
   }, [treeData]);
 
-  const handleMouseLeave = useCallback(() => {
-    if (hoveredIdRef.current !== null) {
-      hoveredIdRef.current = null;
-      setHoveredNode(null);
-      needsRenderRef.current = true;
+  // -----------------------------------------------------------------------
+  // Mouse handlers
+  // -----------------------------------------------------------------------
+  const onDown = useCallback((e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    dragRef.current = false;
+    lastMouse.current = { x: e.clientX, y: e.clientY };
+
+    const onMove = (ev: MouseEvent) => {
+      const dx = ev.clientX - lastMouse.current.x;
+      const dy = ev.clientY - lastMouse.current.y;
+      if (Math.abs(dx) > 2 || Math.abs(dy) > 2) dragRef.current = true;
+      oxRef.current += dx;
+      oyRef.current += dy;
+      lastMouse.current = { x: ev.clientX, y: ev.clientY };
+      needsRender.current = true;
+    };
+
+    const onUp = (ev: MouseEvent) => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+      if (!dragRef.current) {
+        const cv = canvasRef.current;
+        if (!cv) return;
+        const rect = cv.getBoundingClientRect();
+        const node = findNode(ev.clientX - rect.left, ev.clientY - rect.top);
+        if (node && node.type !== "mastery") {
+          setAllocated(prev => {
+            const next = new Set(prev);
+            next.has(node.id) ? next.delete(node.id) : next.add(node.id);
+            onAllocate?.(Array.from(next));
+            return next;
+          });
+        }
+      }
+    };
+
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  }, [findNode, onAllocate]);
+
+  const onMove = useCallback((e: React.MouseEvent) => {
+    const cv = canvasRef.current;
+    if (!cv) return;
+    const rect = cv.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    const node = findNode(cx, cy);
+    if (node?.id !== hovIdRef.current) {
+      hovIdRef.current = node?.id ?? null;
+      setHovered(node);
+      needsRender.current = true;
     }
+    if (node) setTooltipPos({ x: e.clientX, y: e.clientY });
+  }, [findNode]);
+
+  // Wheel zoom
+  useEffect(() => {
+    const cv = canvasRef.current;
+    if (!cv) return;
+    const handler = (e: WheelEvent) => {
+      e.preventDefault();
+      const rect = cv.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      const old = scaleRef.current;
+      const factor = e.deltaY < 0 ? 1.12 : 1 / 1.12;
+      const next = Math.max(0.005, Math.min(2, old * factor));
+      const ratio = next / old;
+      oxRef.current = mx - (mx - oxRef.current) * ratio;
+      oyRef.current = my - (my - oyRef.current) * ratio;
+      scaleRef.current = next;
+      needsRender.current = true;
+    };
+    cv.addEventListener("wheel", handler, { passive: false });
+    return () => cv.removeEventListener("wheel", handler);
+  }, [treeData]); // re-attach when tree loads
+
+  const onLeave = useCallback(() => {
+    if (hovIdRef.current) { hovIdRef.current = null; setHovered(null); needsRender.current = true; }
   }, []);
 
   // -----------------------------------------------------------------------
-  // Render
+  // JSX
   // -----------------------------------------------------------------------
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-full text-red-400 text-sm">
-        Failed to load skill tree: {error}
+  if (error) return <div className="flex items-center justify-center h-full text-red-400 text-sm">Failed to load: {error}</div>;
+  if (!treeData) return (
+    <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
+      <div className="flex flex-col items-center gap-2">
+        <div className="w-6 h-6 border-2 border-amber-500/60 border-t-transparent rounded-full animate-spin" />
+        Loading skill tree...
       </div>
-    );
-  }
-
-  if (!treeData) {
-    return (
-      <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
-        <div className="flex flex-col items-center gap-2">
-          <div className="w-6 h-6 border-2 border-amber-500/60 border-t-transparent rounded-full animate-spin" />
-          Loading skill tree...
-        </div>
-      </div>
-    );
-  }
+    </div>
+  );
 
   return (
     <div ref={containerRef} className="relative w-full h-full overflow-hidden">
       <canvas
         ref={canvasRef}
         className="block w-full h-full cursor-grab active:cursor-grabbing"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        onMouseDown={onDown}
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
       />
-      {hoveredNode && (
+      {hovered && (
         <SkillTreeTooltip
-          node={hoveredNode}
+          node={hovered}
           x={tooltipPos.x}
           y={tooltipPos.y}
-          allocated={allocatedNodes.has(hoveredNode.id)}
+          allocated={allocated.has(hovered.id)}
         />
       )}
     </div>
