@@ -51,18 +51,26 @@ interface NodeStyle {
   allocatedStroke: string;
 }
 
-// Screen-space pixel sizes for nodes
+// Base screen-space pixel sizes — scaled dynamically by zoom level
 const NODE_STYLES: Record<string, NodeStyle> = {
-  small:              { radius: 4,  fill: "#555555", stroke: "#888888", allocatedFill: "#b0a070", allocatedStroke: "#e0d0a0" },
-  notable:            { radius: 7,  fill: "#997a3d", stroke: "#c9a84c", allocatedFill: "#d4af37", allocatedStroke: "#ffe066" },
-  keystone:           { radius: 10, fill: "#5c3d99", stroke: "#8b6cc5", allocatedFill: "#9b6ed8", allocatedStroke: "#c9a8f0" },
-  mastery:            { radius: 5,  fill: "#333333", stroke: "#666666", allocatedFill: "#888888", allocatedStroke: "#bbbbbb" },
-  jewel_socket:       { radius: 6,  fill: "#2d5a27", stroke: "#4a8c41", allocatedFill: "#4daa3d", allocatedStroke: "#7ddf6a" },
-  class_start:        { radius: 12, fill: "#1a4a6e", stroke: "#3498db", allocatedFill: "#3498db", allocatedStroke: "#6fc0f0" },
-  ascendancy_small:   { radius: 4,  fill: "#6e1a1a", stroke: "#993333", allocatedFill: "#cc4444", allocatedStroke: "#ff7777" },
-  ascendancy_notable: { radius: 7,  fill: "#8b1a1a", stroke: "#cc3333", allocatedFill: "#ee5555", allocatedStroke: "#ff9999" },
-  ascendancy_start:   { radius: 6,  fill: "#6e1a1a", stroke: "#993333", allocatedFill: "#cc4444", allocatedStroke: "#ff7777" },
+  small:              { radius: 3,  fill: "#555555", stroke: "#888888", allocatedFill: "#b0a070", allocatedStroke: "#e0d0a0" },
+  notable:            { radius: 5,  fill: "#997a3d", stroke: "#c9a84c", allocatedFill: "#d4af37", allocatedStroke: "#ffe066" },
+  keystone:           { radius: 7,  fill: "#5c3d99", stroke: "#8b6cc5", allocatedFill: "#9b6ed8", allocatedStroke: "#c9a8f0" },
+  mastery:            { radius: 3,  fill: "#333333", stroke: "#666666", allocatedFill: "#888888", allocatedStroke: "#bbbbbb" },
+  jewel_socket:       { radius: 4,  fill: "#2d5a27", stroke: "#4a8c41", allocatedFill: "#4daa3d", allocatedStroke: "#7ddf6a" },
+  class_start:        { radius: 8,  fill: "#1a4a6e", stroke: "#3498db", allocatedFill: "#3498db", allocatedStroke: "#6fc0f0" },
+  ascendancy_small:   { radius: 3,  fill: "#6e1a1a", stroke: "#993333", allocatedFill: "#cc4444", allocatedStroke: "#ff7777" },
+  ascendancy_notable: { radius: 5,  fill: "#8b1a1a", stroke: "#cc3333", allocatedFill: "#ee5555", allocatedStroke: "#ff9999" },
+  ascendancy_start:   { radius: 4,  fill: "#6e1a1a", stroke: "#993333", allocatedFill: "#cc4444", allocatedStroke: "#ff7777" },
 };
+
+/** Compute zoom-dependent multiplier for node sizes.
+ *  At fitScale (~0.03) nodes are tiny dots, at high zoom they're full size. */
+function getNodeScale(zoom: number): number {
+  // Ranges from 0.4 (overview) to 2.5 (zoomed in)
+  const t = Math.min(1, Math.max(0, (zoom - 0.01) / 0.15));
+  return 0.4 + t * 2.1;
+}
 
 const DEFAULT_STYLE: NodeStyle = NODE_STYLES.small;
 
@@ -83,16 +91,15 @@ function hitTest(
   offsetX: number,
   offsetY: number,
 ): ProcessedNode | null {
+  const ns = getNodeScale(scale);
   for (let i = nodes.length - 1; i >= 0; i--) {
     const n = nodes[i];
     const style = getNodeStyle(n.type);
-    // Convert node world pos to screen pos
     const sx = n.x * scale + offsetX;
     const sy = n.y * scale + offsetY;
     const dx = screenX - sx;
     const dy = screenY - sy;
-    // Hit test in screen-space pixels (radius + padding)
-    const hitRadius = style.radius + 4;
+    const hitRadius = style.radius * ns + 3;
     if (dx * dx + dy * dy <= hitRadius * hitRadius) {
       return n;
     }
@@ -299,35 +306,39 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
       ctx.stroke();
     }
 
-    // --- Draw nodes in SCREEN SPACE (fixed pixel sizes) ---
+    // --- Draw nodes in SCREEN SPACE (zoom-dependent sizes) ---
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const ns = getNodeScale(scale);
+
     for (const node of visibleNodes) {
       const style = getNodeStyle(node.type);
       const isAlloc = allocated.has(node.id);
       const isHovered = node.id === hovId;
 
-      // World -> screen
       const sx = node.x * scale + ox;
       const sy = node.y * scale + oy;
 
       const fill = isAlloc ? style.allocatedFill : style.fill;
       const stroke = isAlloc ? style.allocatedStroke : style.stroke;
-      let r = style.radius;
-      if (isHovered) r *= 1.4;
+      let r = style.radius * ns;
+      if (isHovered) r *= 1.3;
 
       ctx.beginPath();
-      ctx.arc(sx, sy, r, 0, Math.PI * 2);
+      ctx.arc(sx, sy, Math.max(0.5, r), 0, Math.PI * 2);
       ctx.fillStyle = fill;
       ctx.fill();
-      ctx.lineWidth = isHovered ? 2 : 1;
-      ctx.strokeStyle = isHovered ? "#ffffff" : stroke;
-      ctx.stroke();
+
+      // Only draw stroke when nodes are big enough
+      if (r > 1.5) {
+        ctx.lineWidth = isHovered ? 2 : 1;
+        ctx.strokeStyle = isHovered ? "#ffffff" : stroke;
+        ctx.stroke();
+      }
     }
 
-    // --- Node labels when zoomed in ---
-    const showLabels = scale > 0.04;
-    if (showLabels) {
-      const fontSize = Math.min(12, Math.max(8, scale * 200));
+    // --- Node labels when zoomed in enough ---
+    if (ns > 1.5) {
+      const fontSize = Math.min(12, Math.max(7, ns * 4));
       ctx.font = `${fontSize}px sans-serif`;
       ctx.fillStyle = "#ccc";
       ctx.textAlign = "center";
@@ -335,8 +346,8 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
         if (node.type === "notable" || node.type === "keystone") {
           const sx = node.x * scale + ox;
           const sy = node.y * scale + oy;
-          const style = getNodeStyle(node.type);
-          ctx.fillText(node.name, sx, sy + style.radius + fontSize + 2);
+          const r = getNodeStyle(node.type).radius * ns;
+          ctx.fillText(node.name, sx, sy + r + fontSize + 1);
         }
       }
     }
@@ -516,13 +527,14 @@ export function SkillTree({ characterClass, onAllocate }: SkillTreeProps) {
   });
 
   // Attach wheel listener with { passive: false } so preventDefault() works in Chrome
+  // Re-run when treeData loads to ensure canvas is mounted
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const handler = (e: WheelEvent) => handleWheelRef.current(e);
     canvas.addEventListener("wheel", handler, { passive: false });
     return () => canvas.removeEventListener("wheel", handler);
-  }, []);
+  }, [treeData]);
 
   const handleMouseLeave = useCallback(() => {
     if (hoveredIdRef.current !== null) {
